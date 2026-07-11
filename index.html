@@ -1,0 +1,3035 @@
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+--bg:#0e0e10;--bg2:#16161a;--bg3:#1e1e24;--bg4:#26262e;--bg5:#2e2e38;
+--border:#2a2a34;--border2:#3a3a48;
+--text:#f0f0f4;--text2:#9898aa;--text3:#5a5a72;
+--acc:#7c6ef7;--acc2:#5a4fd6;--accg:rgba(124,110,247,0.14);
+--grn:#22d48a;--grng:rgba(34,212,138,0.13);
+--amb:#f5a623;--ambg:rgba(245,166,35,0.13);
+--red:#f05d5d;--redg:rgba(240,93,93,0.13);
+--blu:#4da6ff;--blug:rgba(77,166,255,0.13);
+--r:8px;--rl:12px;--rxl:16px;
+}
+[data-theme="light"]{
+--bg:#f5f5f8;--bg2:#ffffff;--bg3:#f0f0f4;--bg4:#e6e6ec;--bg5:#dcdce4;
+--border:#e2e2ea;--border2:#d0d0dc;
+--text:#16161a;--text2:#5a5a6e;--text3:#8f8fa0;
+--acc:#7c6ef7;--acc2:#6a5ce0;--accg:rgba(124,110,247,0.10);
+--grn:#1aa669;--grng:rgba(26,166,105,0.10);
+--amb:#c9820a;--ambg:rgba(201,130,10,0.10);
+--red:#d43f3f;--redg:rgba(212,63,63,0.10);
+--blu:#2b7fd6;--blug:rgba(43,127,214,0.10);
+}
+body{transition:background-color .2s,color .2s}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;font-size:14px}
+#APP{min-height:100dvh}
+
+/* ── Mobile bottom nav ── */
+.mob-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);z-index:200;padding:6px 0 env(safe-area-inset-bottom,6px)}
+.mob-nav-inner{display:flex;justify-content:space-around;align-items:center}
+.mob-nav-btn{display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 8px;border-radius:var(--r);cursor:pointer;color:var(--text3);font-size:10px;font-weight:500;border:none;background:none;font-family:inherit;min-width:48px}
+.mob-nav-btn i{font-size:20px}
+.mob-nav-btn.on{color:var(--acc)}
+.mob-nav-btn .mob-badge{position:absolute;top:2px;right:4px;width:7px;height:7px;border-radius:50%;background:var(--red)}
+.mob-nav-btn-wrap{position:relative}
+
+/* ── Mobile sidebar drawer ── */
+.mob-drawer-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:250}
+.mob-drawer-overlay.open{display:block}
+.mob-drawer{position:fixed;left:0;top:0;bottom:0;width:260px;background:var(--bg2);border-right:1px solid var(--border);z-index:260;transform:translateX(-100%);transition:transform .25s;overflow-y:auto;padding:14px 10px;display:flex;flex-direction:column;gap:16px}
+.mob-drawer.open{transform:translateX(0)}
+
+.auth-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:600px;padding:24px;position:relative}
+.auth-footer{text-align:center;margin-top:18px;font-size:11px;color:var(--text3);letter-spacing:.03em}
+.auth-footer span{color:var(--text2);font-weight:500}
+.auth-card{background:var(--bg2);border:1px solid var(--border2);border-radius:20px;padding:36px 32px;width:380px;max-width:100%}
+.auth-logo{font-size:22px;font-weight:800;color:var(--acc);margin-bottom:6px;letter-spacing:-0.5px}
+.auth-logo span{color:var(--text)}
+.auth-sub{font-size:13px;color:var(--text2);margin-bottom:28px;line-height:1.5}
+.auth-title{font-size:18px;font-weight:700;margin-bottom:20px}
+.fg{margin-bottom:14px}
+.fg label{display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.07em}
+.fg input{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:10px 12px;color:var(--text);font-size:14px;font-family:inherit;outline:none;transition:border-color .15s}
+.fg input:focus{border-color:var(--acc)}
+.fg .hint{font-size:11px;color:var(--text3);margin-top:4px}
+.fg .err{font-size:11px;color:var(--red);margin-top:4px}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:8px 14px;border-radius:var(--r);font-size:13px;font-weight:500;cursor:pointer;border:none;font-family:inherit;transition:all .15s;white-space:nowrap;justify-content:center}
+.btn-p{background:var(--acc);color:#fff;width:100%}.btn-p:hover{background:var(--acc2)}
+.btn-g{background:transparent;color:var(--text2);border:1px solid var(--border2)}.btn-g:hover{background:var(--bg4);color:var(--text)}
+.btn-d{background:transparent;color:var(--red);border:1px solid rgba(240,93,93,0.3)}.btn-d:hover{background:var(--redg)}
+.btn-sm{padding:5px 10px;font-size:12px}
+.btn-icon{background:transparent;border:1px solid var(--border2);color:var(--text2);padding:6px 8px;border-radius:var(--r)}.btn-icon:hover{background:var(--bg4);color:var(--text)}
+.auth-switch{text-align:center;margin-top:18px;font-size:13px;color:var(--text2)}
+.auth-switch a{color:var(--acc);cursor:pointer;text-decoration:none;font-weight:500}
+.auth-switch a:hover{text-decoration:underline}
+.input-prefix{display:flex;align-items:center;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);overflow:hidden;transition:border-color .15s}
+.input-prefix:focus-within{border-color:var(--acc)}
+.input-prefix span{padding:0 10px;color:var(--text3);font-size:14px;background:var(--bg4);border-right:1px solid var(--border2);height:42px;display:flex;align-items:center;flex-shrink:0}
+.input-prefix input{background:none;border:none;outline:none;flex:1;padding:10px 12px;color:var(--text);font-size:14px;font-family:inherit}
+
+.app-layout{display:grid;grid-template-rows:52px 1fr auto;min-height:600px;max-height:900px}
+.navbar{background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 14px;gap:8px}
+.logo{font-weight:800;font-size:17px;color:var(--acc);letter-spacing:-0.5px;margin-right:4px;flex-shrink:0}
+.logo span{color:var(--text)}
+.nav-teams{display:flex;gap:5px;flex:1;overflow-x:auto;scrollbar-width:none}
+.nav-teams::-webkit-scrollbar{display:none}
+.tpill{display:flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid var(--border2);background:var(--bg3);white-space:nowrap;transition:all .15s;flex-shrink:0}
+.tpill:hover,.tpill.on{border-color:var(--acc);background:var(--accg);color:var(--acc)}
+.nb-right{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.user-pill{display:flex;align-items:center;gap:7px;padding:5px 10px;border-radius:20px;background:var(--bg3);border:1px solid var(--border);cursor:pointer;font-size:12px;font-weight:500}
+.user-pill:hover{border-color:var(--border2)}
+.notif-wrap{position:relative}
+.notif-dot{position:absolute;top:3px;right:3px;width:7px;height:7px;border-radius:50%;background:var(--red);border:2px solid var(--bg2)}
+
+.main-layout{display:grid;grid-template-columns:220px 1fr;overflow:hidden;height:calc(900px - 52px)}
+.sidebar{background:var(--bg2);border-right:1px solid var(--border);overflow-y:auto;padding:14px 10px;display:flex;flex-direction:column;gap:16px}
+.content{overflow-y:auto;padding:18px 20px;background:var(--bg)}
+.sb-label{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:7px;padding:0 4px}
+.nav-item{display:flex;align-items:center;gap:8px;padding:7px 9px;border-radius:var(--r);cursor:pointer;font-size:13px;font-weight:500;color:var(--text2);transition:all .12s}
+.nav-item:hover{background:var(--bg3);color:var(--text)}
+.nav-item.on{background:var(--accg);color:var(--acc)}
+.nav-item i{font-size:15px;flex-shrink:0}
+.nav-badge{margin-left:auto;font-size:10px;padding:1px 6px;border-radius:20px;background:var(--bg4);color:var(--text2)}
+.nav-badge.r{background:var(--redg);color:var(--red)}
+.member-row{display:flex;align-items:center;gap:7px;padding:5px 7px;border-radius:var(--r);cursor:pointer;transition:background .1s}
+.member-row:hover{background:var(--bg3)}
+.member-row.on{background:var(--accg)}
+.av{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;flex-shrink:0;font-size:11px}
+.av-xs{width:22px;height:22px;font-size:9px}
+.av-sm{width:28px;height:28px;font-size:11px}
+.av-md{width:36px;height:36px;font-size:14px}
+.av-lg{width:46px;height:46px;font-size:18px}
+.divider{height:1px;background:var(--border);margin:4px 0}
+
+.page-hdr{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.page-title{font-size:19px;font-weight:700;letter-spacing:-0.3px;flex:1}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
+.stat{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:13px}
+.stat-lbl{font-size:11px;color:var(--text2);margin-bottom:4px}
+.stat-val{font-size:21px;font-weight:700}
+.tabs-row{display:flex;border-bottom:1px solid var(--border);margin-bottom:14px}
+.tab{padding:7px 13px;font-size:12px;font-weight:500;cursor:pointer;border-bottom:2px solid transparent;color:var(--text2);transition:all .12s;margin-bottom:-1px}
+.tab:hover{color:var(--text)}.tab.on{color:var(--acc);border-bottom-color:var(--acc)}
+.toolbar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.search-box{display:flex;align-items:center;gap:6px;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:6px 10px;flex:1;min-width:140px}
+.search-box input{background:none;border:none;outline:none;color:var(--text);font-size:13px;width:100%;font-family:inherit}
+.search-box i{color:var(--text3);font-size:14px}
+select.flt{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:6px 9px;color:var(--text);font-size:12px;font-family:inherit;cursor:pointer;outline:none}
+.task-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:13px;margin-bottom:9px;cursor:pointer;transition:border-color .15s}
+.task-card:hover{border-color:var(--border2)}
+.task-card.done-c{opacity:.6}
+.tc-hdr{display:flex;align-items:flex-start;gap:7px;margin-bottom:7px}
+.tc-title{font-size:14px;font-weight:500;flex:1;line-height:1.4}
+.tc-title.sk{text-decoration:line-through;color:var(--text2)}
+.prio-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:6px}
+.tc-meta{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.badge{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:500}
+.b-todo{background:var(--bg4);color:var(--text2)}
+.b-inprogress{background:var(--blug);color:var(--blu)}
+.b-done{background:var(--grng);color:var(--grn)}
+.b-blocked{background:var(--redg);color:var(--red)}
+.b-review{background:var(--ambg);color:var(--amb)}
+.dl{display:flex;align-items:center;gap:3px;font-size:11px;font-weight:500}
+.dl-ok{color:var(--grn)}.dl-soon{color:var(--amb)}.dl-urg{color:var(--red)}
+.av-stack{display:flex;margin-left:auto}
+.av-stack .av{border:2px solid var(--bg2);margin-left:-5px}
+.prog-bar{height:3px;border-radius:2px;background:var(--bg4);overflow:hidden;margin-top:8px}
+.prog-fill{height:100%;border-radius:2px;background:var(--acc)}
+.lbl{padding:1px 6px;border-radius:20px;font-size:10px;font-weight:600}
+.cc{display:flex;align-items:center;gap:3px;font-size:11px;color:var(--text2)}
+.empty{text-align:center;padding:40px 16px;color:var(--text2)}
+.empty i{font-size:38px;opacity:.3;display:block;margin-bottom:10px}
+.kanban{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.rank-row{display:grid;grid-template-columns:32px 1fr 55px 55px 65px;gap:6px;align-items:center;padding:12px 14px}
+.rank-hdr{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--border);padding:10px 14px}
+.kb-mob-tabs{display:none}
+.kb-mob-tab{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;background:var(--bg3);border:1.5px solid var(--border2);color:var(--text2);cursor:pointer;white-space:nowrap;font-family:inherit}
+.kb-col{background:var(--bg3);border-radius:var(--rl);padding:11px;min-height:180px}
+.kb-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;font-size:12px;font-weight:600}
+.kb-cnt{padding:1px 6px;border-radius:20px;background:var(--bg5);font-size:11px;color:var(--text2)}
+.kb-task{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:9px;margin-bottom:7px;cursor:pointer;transition:border-color .15s;font-size:12px}
+.kb-task:hover{border-color:var(--border2)}
+.modal-wrap{position:absolute;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:300;min-height:600px}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rxl);padding:22px;width:460px;max-width:96%;max-height:88vh;overflow-y:auto;position:relative}
+.modal-w{width:580px}
+.modal-title{font-size:15px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:7px}
+.mfg{margin-bottom:13px}
+.mfg label{display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.07em}
+.mfg input,.mfg select,.mfg textarea{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:8px 11px;color:var(--text);font-size:13px;font-family:inherit;outline:none;transition:border-color .15s}
+.mfg input:focus,.mfg select:focus,.mfg textarea:focus{border-color:var(--acc)}
+.mfg textarea{resize:vertical;min-height:64px}
+.mfg select option{background:var(--bg3)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mfooter{display:flex;gap:7px;justify-content:flex-end;margin-top:16px;border-top:1px solid var(--border);padding-top:12px}
+.swatches{display:flex;gap:5px;flex-wrap:wrap}
+.sw{width:22px;height:22px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:border-color .12s}
+.sw.on{border-color:var(--text)}
+.chip-grid{display:flex;flex-wrap:wrap;gap:5px}
+.chip{padding:4px 9px;border-radius:20px;border:1px solid var(--border2);font-size:12px;cursor:pointer;transition:all .12px;background:var(--bg3)}
+.chip.on{background:var(--accg);border-color:var(--acc);color:var(--acc)}
+.assignee-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:5px}
+.a-chip{display:flex;align-items:center;gap:5px;padding:5px 7px;border-radius:var(--r);border:1px solid var(--border2);cursor:pointer;font-size:12px;font-weight:500;background:var(--bg3);transition:all .12s}
+.a-chip.on{background:var(--accg);border-color:var(--acc);color:var(--acc)}
+.label-row{display:flex;gap:5px;flex-wrap:wrap}
+.lp{padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;border:2px solid transparent;transition:border-color .12s}
+.lp.on{border-color:currentColor}
+.comment-item{background:var(--bg3);border-radius:var(--r);padding:9px;margin-bottom:7px}
+.c-hdr{display:flex;align-items:center;gap:7px;margin-bottom:5px}
+.c-name{font-size:12px;font-weight:600}
+.c-time{font-size:11px;color:var(--text3)}
+.c-text{font-size:12px;line-height:1.5;color:var(--text2)}
+.c-input-row{display:flex;gap:7px;margin-top:10px}
+.c-input-row input{flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:7px 10px;color:var(--text);font-size:12px;font-family:inherit;outline:none}
+.c-input-row input:focus{border-color:var(--acc)}
+.c-input-wrap{position:relative;flex:1}
+.mention-tag{color:var(--acc);font-weight:600;background:var(--accg);padding:0 3px;border-radius:3px}
+.mention-dropdown{position:absolute;bottom:100%;left:0;right:0;margin-bottom:6px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);max-height:160px;overflow-y:auto;z-index:50;box-shadow:0 -4px 16px rgba(0,0,0,.4)}
+.mention-item{display:flex;align-items:center;gap:7px;padding:7px 10px;cursor:pointer;font-size:12px}
+.mention-item:hover,.mention-item.hi{background:var(--bg4)}
+
+/* ── Team Chat ── */
+.chat-wrap{display:flex;flex-direction:column;height:calc(100dvh - 220px);min-height:340px;background:linear-gradient(180deg,transparent,var(--bg2) 140%);border-radius:var(--rxl)}
+.chat-msgs{flex:1;overflow-y:auto;padding:14px 10px;display:flex;flex-direction:column;gap:12px;scroll-behavior:smooth}
+.chat-msgs::-webkit-scrollbar{width:5px}
+.chat-msgs::-webkit-scrollbar-thumb{background:var(--border2);border-radius:10px}
+.chat-msgs::-webkit-scrollbar-track{background:transparent}
+.chat-row{display:flex;gap:9px;max-width:76%;animation:msgIn .28s cubic-bezier(.21,1.02,.73,1) both}
+@keyframes msgIn{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.chat-row.own{align-self:flex-end;flex-direction:row-reverse}
+.chat-row .av{box-shadow:0 0 0 2px var(--bg),0 2px 8px rgba(0,0,0,.25);align-self:flex-end;margin-bottom:4px}
+.chat-bubble{background:var(--bg3);border:1px solid var(--border);border-radius:18px 18px 18px 5px;padding:9px 14px;font-size:13.5px;line-height:1.55;color:var(--text);box-shadow:0 2px 10px rgba(0,0,0,.12);transition:transform .15s;word-break:break-word}
+.chat-bubble:hover{transform:translateY(-1px)}
+.chat-row.own .chat-bubble{background:linear-gradient(135deg,var(--acc) 0%,#9b8cff 100%);border:none;color:#fff;border-radius:18px 18px 5px 18px;box-shadow:0 4px 14px rgba(124,110,247,.35)}
+.chat-row.own .mention-tag{background:rgba(255,255,255,.28);color:#fff}
+.chat-meta{display:flex;align-items:center;gap:7px;margin-bottom:3px;padding:0 4px}
+.chat-name{font-size:11px;font-weight:700;color:var(--text2);letter-spacing:.02em}
+.chat-row.own .chat-meta{flex-direction:row-reverse}
+.chat-time{font-size:10px;color:var(--text3)}
+.chat-input-bar{display:flex;gap:9px;padding:12px;margin-top:8px;background:var(--bg2);border:1px solid var(--border);border-radius:18px;box-shadow:0 4px 20px rgba(0,0,0,.18);align-items:center}
+.chat-input-bar .c-input-wrap input{background:var(--bg3);border:1.5px solid transparent;border-radius:14px;padding:11px 16px;font-size:13.5px;transition:all .2s;width:100%}
+.chat-input-bar .c-input-wrap input:focus{border-color:var(--acc);background:var(--bg);box-shadow:0 0 0 3px var(--accg)}
+.chat-send-btn{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--acc) 0%,#9b8cff 100%);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .18s;box-shadow:0 4px 12px rgba(124,110,247,.4)}
+.chat-send-btn:hover{transform:scale(1.08) rotate(-8deg);box-shadow:0 6px 18px rgba(124,110,247,.55)}
+.chat-send-btn:active{transform:scale(.95)}
+.chat-send-btn i{font-size:17px;margin-left:-2px}
+.chat-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--text3);gap:10px}
+.chat-empty-icon{width:72px;height:72px;border-radius:50%;background:var(--accg);display:flex;align-items:center;justify-content:center;animation:emptyPulse 2.4s ease-in-out infinite}
+@keyframes emptyPulse{0%,100%{transform:scale(1);opacity:.8}50%{transform:scale(1.08);opacity:1}}
+.chat-day-sep{text-align:center;font-size:10.5px;font-weight:600;color:var(--text3);margin:10px auto;padding:3px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:20px;width:fit-content;letter-spacing:.05em;text-transform:uppercase}
+.act-item{display:flex;gap:9px;padding:8px 0;border-bottom:1px solid var(--border)}
+.act-icon{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px}
+.act-text{font-size:12px;color:var(--text2);line-height:1.5}
+.act-text strong{color:var(--text);font-weight:500}
+.act-time{font-size:10px;color:var(--text3);margin-top:2px}
+.notif-item{display:flex;gap:9px;padding:9px;border-radius:var(--r);margin-bottom:6px;background:var(--bg3);border:1px solid var(--border)}
+.notif-item.unread{border-color:var(--acc);background:var(--accg)}
+.nd{width:6px;height:6px;border-radius:50%;background:var(--acc);flex-shrink:0;margin-top:5px}
+.invite-card{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rl);padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:12px}
+.invite-card.pen{border-color:var(--amb);background:var(--ambg)}
+.mc-lg{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:14px}
+.sp{padding:2px 8px;border-radius:20px;font-size:11px;font-weight:500;background:var(--accg);color:var(--acc)}
+.tl-row{display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:1px solid var(--border)}
+.bar-ch{display:flex;gap:5px;align-items:flex-end;height:90px}
+.bw{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
+.bar{width:100%;border-radius:3px 3px 0 0}
+.bl{font-size:10px;color:var(--text3)}
+.bv{font-size:10px;font-weight:600;color:var(--text2)}
+.an-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:11px;margin-bottom:14px}
+.cc-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:14px}
+.cc-title{font-size:12px;font-weight:600;color:var(--text2);margin-bottom:10px}
+.donut-wrap{display:flex;align-items:center;gap:14px}
+.legend{display:flex;flex-direction:column;gap:5px}
+.li{display:flex;align-items:center;gap:5px;font-size:11px}
+.ld{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.no-team-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:14px;color:var(--text2);text-align:center;padding:32px;grid-column:1/-1}
+.inv-banner{background:var(--ambg);border:1px solid var(--amb);border-radius:var(--rl);padding:12px 14px;margin-bottom:16px;display:flex;align-items:center;gap:10px;cursor:pointer}
+.inv-banner:hover{background:rgba(245,166,35,0.2)}
+.online-dot{width:8px;height:8px;border-radius:50%;background:var(--grn);flex-shrink:0}
+.footer{text-align:center;padding:10px 0;font-size:11px;color:var(--text3);background:var(--bg);border-top:1px solid var(--border);letter-spacing:.03em}
+.footer span{color:var(--text2);font-weight:500}
+.save-indicator{position:fixed;bottom:16px;right:16px;padding:7px 12px;border-radius:var(--r);font-size:12px;font-weight:500;z-index:999;transition:opacity .3s;pointer-events:none}
+.save-ok{background:var(--grng);color:var(--grn);border:1px solid var(--grn)}
+.save-err{background:var(--redg);color:var(--red);border:1px solid var(--red)}
+/* ── AI Assistant ── */
+.asst-fab{position:fixed;bottom:22px;right:22px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--acc) 0%,#9b8cff 100%);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 24px rgba(124,110,247,.5);z-index:280;transition:transform .2s;animation:asstFloat 3s ease-in-out infinite}
+.asst-fab:hover{transform:scale(1.1) rotate(8deg)}
+.asst-fab:active{transform:scale(.94)}
+.asst-fab i{font-size:26px;color:#fff}
+@keyframes asstFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.asst-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:290;display:none;backdrop-filter:blur(2px)}
+.asst-overlay.open{display:block}
+.asst-panel{position:fixed;bottom:22px;right:22px;width:380px;max-width:calc(100vw - 24px);max-height:calc(100dvh - 120px);background:var(--bg2);border:1px solid var(--border2);border-radius:20px;z-index:295;box-shadow:0 12px 48px rgba(0,0,0,.5);display:none;flex-direction:column;overflow:hidden;animation:asstIn .25s cubic-bezier(.21,1.02,.73,1)}
+.asst-panel.open{display:flex}
+@keyframes asstIn{from{opacity:0;transform:translateY(20px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+.asst-hdr{display:flex;align-items:center;gap:10px;padding:15px 16px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,var(--accg),transparent)}
+.asst-hdr-icon{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--acc),#9b8cff);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.asst-hdr-icon i{color:#fff;font-size:18px}
+.asst-body{flex:1;overflow-y:auto;padding:14px}
+.asst-opt{display:flex;align-items:center;gap:12px;padding:13px;border-radius:12px;background:var(--bg3);border:1px solid var(--border);cursor:pointer;margin-bottom:9px;transition:all .15s}
+.asst-opt:hover{border-color:var(--acc);background:var(--accg);transform:translateX(3px)}
+.asst-opt-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:19px}
+.asst-opt-title{font-size:13px;font-weight:600}
+.asst-opt-desc{font-size:11px;color:var(--text2);margin-top:1px}
+.asst-back{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--acc);cursor:pointer;margin-bottom:12px;font-weight:500}
+.asst-plan-group{margin-bottom:16px}
+.asst-plan-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.asst-task{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-bottom:7px;cursor:pointer;transition:border-color .15s}
+.asst-task:hover{border-color:var(--border2)}
+.asst-task-title{font-size:12.5px;font-weight:500;line-height:1.4}
+.asst-task-reason{font-size:11px;color:var(--text2);margin-top:3px}
+
+/* ── */
+@keyframes dot{0%,80%,100%{opacity:.2;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
+
+/* ── Responsive ── */
+@media(max-width:768px){
+  /* layout */
+  .app-layout{grid-template-rows:52px 1fr 56px;min-height:100dvh;max-height:none}
+  .main-layout{grid-template-columns:1fr;height:calc(100dvh - 52px - 56px)}
+  .sidebar{display:none}
+  .content{padding:12px 14px 16px}
+
+  /* navbar */
+  .navbar{padding:0 10px;gap:5px}
+  .nav-teams{display:none}
+  .nb-right .btn-p{display:none}
+  .logo{font-size:15px}
+
+  /* show mobile nav */
+  .mob-nav{display:block}
+  .footer{display:none}
+
+  /* stats grid 2 col on mobile */
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+
+  /* kanban: tab-based single column on mobile */
+  .kb-mob-tabs{display:flex;gap:6px;overflow-x:auto;margin-bottom:12px;padding-bottom:2px;scrollbar-width:none}
+  .kb-mob-tabs::-webkit-scrollbar{display:none}
+  .kanban{display:block}
+  .kb-col{display:none}
+  .kb-col.kb-col-active{display:block}
+
+  /* analytics 1 col */
+  .mob-team-pill{display:flex!important}
+  .an-grid{grid-template-columns:1fr}
+
+  /* modal full screen on mobile */
+  .modal-wrap{align-items:flex-end;padding:0}
+  .modal,.modal-w{width:100%;max-width:100%;border-radius:var(--rxl) var(--rxl) 0 0;max-height:92dvh}
+
+  /* members grid 1 col */
+  .no-team-screen{grid-column:1}
+
+  /* ranking table: tighter columns on mobile so points stay visible */
+  .rank-row{grid-template-columns:24px 1fr 42px 42px 55px;gap:4px;padding:10px 8px}
+  .rank-hdr{padding:8px 8px;font-size:10px}
+
+  /* chat on mobile: account for bottom nav */
+  .chat-wrap{height:calc(100dvh - 52px - 56px - 120px);min-height:300px}
+  .chat-row{max-width:88%}
+  .chat-input-bar{padding:9px;border-radius:14px}
+  .chat-send-btn{width:38px;height:38px}
+
+  /* FAB above bottom nav on mobile */
+  .asst-fab{bottom:70px;right:16px;width:50px;height:50px}
+  .asst-fab i{font-size:23px}
+  .asst-panel{bottom:70px;right:12px;left:12px;width:auto;max-height:calc(100dvh - 160px)}
+
+  /* page header wrap */
+  .page-hdr{flex-wrap:wrap;gap:7px}
+  .page-title{font-size:16px}
+}
+</style>
+
+<div id="APP"></div>
+<div id="MODAL_ROOT"></div>
+<div id="SAVE_IND" style="display:none" class="save-indicator"></div>
+<div id="ASSISTANT_ROOT"></div>
+
+<script>
+const COLORS=['#7c6ef7','#22d48a','#f5a623','#4da6ff','#e86ddb','#f05d5d','#26c6da','#ff9f43'];
+const SKILLS=['Frontend','Backend','Design','DevOps','Data','Mobile','QA','PM','Marketing','Research','Security','Writing'];
+const LABELS=[{id:'bug',name:'Bug',color:'#f05d5d'},{id:'feat',name:'Feature',color:'#7c6ef7'},{id:'docs',name:'Docs',color:'#4da6ff'},{id:'ui',name:'UI',color:'#e86ddb'},{id:'perf',name:'Performance',color:'#f5a623'},{id:'test',name:'Testing',color:'#22d48a'}];
+const AC2=['#7c6ef7','#22d48a','#f5a623','#4da6ff','#e86ddb','#f05d5d','#26c6da','#ff9f43','#a29bfe','#fd79a8'];
+const STATUS_MAP={todo:'To Do',inprogress:'In Progress',done:'Done',blocked:'Blocked',review:'Review'};
+
+// ── Team Roles ───────────────────────────────────────────────────
+const ROLES={owner:{label:'Owner',icon:'👑',color:'#f5a623'},admin:{label:'Admin',icon:'🛡️',color:'#7c6ef7'},member:{label:'Member',icon:'✏️',color:'#22d48a'},viewer:{label:'Viewer',icon:'👁️',color:'#9898aa'}};
+
+function getMyRole(team){
+  if(!team)return null;
+  if(team.ownerId===SESSION.userId)return'owner';
+  return(team.roles||{})[SESSION.userId]||'member';
+}
+function canInvite(team){const r=getMyRole(team);return r==='owner'||r==='admin';}
+function canKick(team){const r=getMyRole(team);return r==='owner'||r==='admin';}
+function canEditTask(team,task){
+  const r=getMyRole(team);
+  if(r==='owner'||r==='admin')return true;
+  if(r==='member')return(task.assignees||[]).includes(SESSION.userId)||task.createdBy===SESSION.userId;
+  return false;
+}
+function canCreateTask(team){const r=getMyRole(team);return r==='owner'||r==='admin'||r==='member';}
+function canDeleteTask(team,task){
+  const r=getMyRole(team);
+  if(r==='owner'||r==='admin')return true;
+  if(r==='member')return task.createdBy===SESSION.userId;
+  return false;
+}
+function isViewer(team){return getMyRole(team)==='viewer';}
+
+// ── Supabase ────────────────────────────────────────────────────
+const SUPABASE_URL = 'https://tclfrmvmdsdoxdjfcuza.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_r-g4L6Lf0h0Q5RkqPtdvkQ_7WVBvAtY';
+
+// ── Telegram Bot ─────────────────────────────────────────────────
+const TG_TOKEN = '8984355808:AAHrb-7FjAy7iUcOcPzdthGeMpMmpwQZQi0';
+
+// FIX: صف ارسال + retry برای جلوگیری از گم شدن پیام‌ها
+// دلایل قبلی گم شدن پیام: بدون retry، قطعی لحظه‌ای شبکه یا rate-limit تلگرام
+// باعث می‌شد پیام برای همیشه از بین بره و فقط یه warning تو Console بمونه.
+let _tgQueue=Promise.resolve();
+
+function tgSend(chatId, text){
+  if(!chatId){console.warn('tgSend: no chatId');return Promise.resolve(false);}
+  // صف: پیام‌ها یکی‌یکی و با فاصله فرستاده میشن تا rate-limit تلگرام نخوریم
+  const job=_tgQueue.then(()=>_tgSendWithRetry(chatId,text));
+  _tgQueue=job.catch(()=>{}); // اگه یکی fail شد صف متوقف نشه
+  return job;
+}
+
+async function _tgSendWithRetry(chatId, text, attempt=1){
+  const MAX_ATTEMPTS=3;
+  console.log(`tgSend to: ${chatId} (attempt ${attempt})`);
+  try{
+    const res=await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({chat_id:chatId, text, parse_mode:'HTML'})
+    });
+    const data=await res.json();
+
+    if(data.ok){
+      console.log('Telegram sent OK to',chatId);
+      return true;
+    }
+
+    // 429 = Too Many Requests — تلگرام میگه چقدر صبر کنیم
+    if(res.status===429 && data.parameters?.retry_after && attempt<MAX_ATTEMPTS){
+      const waitMs=(data.parameters.retry_after+1)*1000;
+      console.warn(`Telegram rate-limited, retrying in ${waitMs}ms...`);
+      await new Promise(r=>setTimeout(r,waitMs));
+      return _tgSendWithRetry(chatId,text,attempt+1);
+    }
+
+    console.error('Telegram error (not retrying):',data);
+    return false;
+  }catch(e){
+    // خطای شبکه (قطعی لحظه‌ای، فیلترینگ و غیره) — دوباره امتحان کن
+    if(attempt<MAX_ATTEMPTS){
+      const waitMs=1000*attempt; // 1s, 2s
+      console.warn(`Telegram network error, retrying in ${waitMs}ms... (${e.message})`);
+      await new Promise(r=>setTimeout(r,waitMs));
+      return _tgSendWithRetry(chatId,text,attempt+1);
+    }
+    console.error('Telegram notify failed after retries:',e);
+    return false;
+  }
+}
+
+// ── EmailJS (verification & password reset) ─────────────────────
+const EMAILJS_SERVICE_ID='service_j23tcdm';
+const EMAILJS_VERIFY_TEMPLATE='template_vdp96vi';
+const EMAILJS_RESET_TEMPLATE='template_6m3sqmf';
+const EMAILJS_PUBLIC_KEY='l5X261Zb_ms8LO088';
+
+function genToken(){
+  return Array.from(crypto.getRandomValues(new Uint8Array(20))).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+function getBaseUrl(){
+  return window.location.origin+window.location.pathname;
+}
+
+async function sendVerificationEmail(user){
+  const token=genToken();
+  user.verified=false;
+  user.verifyToken=token;
+  const link=`${getBaseUrl()}?verify=${token}&uid=${user.id}`;
+  try{
+    await emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_VERIFY_TEMPLATE,{
+      to_name:user.display,
+      to_email:user.email,
+      verify_link:link
+    },EMAILJS_PUBLIC_KEY);
+    return true;
+  }catch(e){
+    console.error('EmailJS verify send failed:',e);
+    return false;
+  }
+}
+
+async function sendResetEmail(user){
+  const token=genToken();
+  user.resetToken=token;
+  user.resetExpires=Date.now()+60*60*1000; // 1 ساعت
+  const link=`${getBaseUrl()}?reset=${token}&uid=${user.id}`;
+  try{
+    await emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_RESET_TEMPLATE,{
+      to_name:user.display,
+      to_email:user.email,
+      reset_link:link
+    },EMAILJS_PUBLIC_KEY);
+    return true;
+  }catch(e){
+    console.error('EmailJS reset send failed:',e);
+    return false;
+  }
+}
+
+
+let DB={users:{},teams:{},invites:[],deletedTeams:[],deletedTasks:{},chats:{}};
+let SESSION={userId:null};
+let UI={page:'tasks',filter:'all',memberFilter:null,searchQ:'',activeTeam:null,theme:'dark',perfSort:'health',perfSearch:''};
+let tmpColor=COLORS[0],tmpSkills=[],tmpAssignees=[],tmpLabels=[];
+
+function showSaveIndicator(ok,msg){
+  const el=document.getElementById('SAVE_IND');
+  if(!el)return;
+  el.className='save-indicator '+(ok?'save-ok':'save-err');
+  el.textContent=ok?'✓ Saved':'✗ '+(msg||'Save failed');
+  el.style.display='block';
+  el.style.opacity='1';
+  setTimeout(()=>{el.style.opacity='0';setTimeout(()=>el.style.display='none',300)},2000);
+}
+
+function saveLocal(){
+  try{localStorage.setItem('tfauth_sess',JSON.stringify(SESSION));localStorage.setItem('tfauth_ui',JSON.stringify(UI));}catch(e){}
+}
+
+// ── DB helpers: هر entity یه row جدا توی Supabase ──────────────
+// ساختار: { id: "user_xxx" | "team_xxx" | "meta", type: "...", data: {...} }
+
+async function sbUpsert(id, type, data){
+  const res=await fetch(SUPABASE_URL+'/rest/v1/teamflow?on_conflict=id',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Prefer':'resolution=merge-duplicates,return=minimal'},
+    body:JSON.stringify({id, type, data})
+  });
+  if(!res.ok){const e=await res.text();throw new Error(e);}
+}
+
+// FIX: هر entity مستقل save میشه — بدون _saving flag که باعث block شدن میشد
+async function svUser(uid){
+  uid=uid||SESSION.userId;
+  const u=DB.users[uid];if(!u)return true;
+  saveLocal();
+  try{await sbUpsert('user_'+uid,'user',u);showSaveIndicator(true);return true;}
+  catch(e){console.error('svUser error:',e);showSaveIndicator(false,'Save error');return false;}
+}
+
+async function svTeam(teamId){
+  teamId=teamId||UI.activeTeam;
+  const t=DB.teams[teamId];if(!t)return true;
+  saveLocal();
+  try{await sbUpsert('team_'+teamId,'team',t);showSaveIndicator(true);return true;}
+  catch(e){console.error('svTeam error:',e);showSaveIndicator(false,'Save error');return false;}
+}
+
+async function svMeta(){
+  saveLocal();
+  try{
+    await sbUpsert('meta','meta',{
+      invites:DB.invites||[],
+      deletedTeams:DB.deletedTeams||[],
+      deletedTasks:DB.deletedTasks||{}
+    });
+    showSaveIndicator(true);return true;
+  }catch(e){console.error('svMeta error:',e);showSaveIndicator(false,'Save error');return false;}
+}
+
+// FIX: چت هر تیم توی یه row جدا ذخیره میشه، کاملاً مجزا از team تا row تیم بزرگ نشه
+async function svChat(teamId){
+  teamId=teamId||UI.activeTeam;
+  if(!teamId)return true;
+  const chat=DB.chats[teamId]||{messages:[]};
+  saveLocal();
+  try{await sbUpsert('chat_'+teamId,'chat',chat);return true;}
+  catch(e){console.error('svChat error:',e);showSaveIndicator(false,'Chat save error');return false;}
+}
+
+// فقط چت یه تیم رو از سرور بخون — برای polling سبک، بدون لود کل DB
+async function loadChat(teamId){
+  try{
+    const res=await fetch(SUPABASE_URL+'/rest/v1/teamflow?id=eq.chat_'+teamId+'&select=data',{
+      headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}
+    });
+    if(!res.ok) return null;
+    const rows=await res.json();
+    if(rows.length===0)return{messages:[]};
+    return rows[0].data||{messages:[]};
+  }catch(e){console.warn('loadChat failed:',e);return null;}
+}
+
+// sv عمومی — برای backward compatibility
+async function sv(scope='all'){
+  saveLocal();
+  try{
+    if(scope==='meta') return await svMeta();
+    if(scope.startsWith('user:')) return await svUser(scope.split(':')[1]);
+    if(scope.startsWith('team:')) return await svTeam(scope.split(':')[1]);
+    if(scope==='all'){
+      const jobs=[svMeta()];
+      Object.values(DB.users).forEach(u=>jobs.push(svUser(u.id)));
+      Object.values(DB.teams).forEach(t=>jobs.push(svTeam(t.id)));
+      const results=await Promise.all(jobs);
+      return results.every(Boolean);
+    }
+    return true;
+  }catch(e){console.error('sv error:',e);return false;}
+}
+
+async function loadDB(){
+  let rows;
+  try{
+    const res=await fetch(SUPABASE_URL+'/rest/v1/teamflow?select=id,type,data',{
+      headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}
+    });
+    if(!res.ok) throw new Error(await res.text());
+    rows=await res.json();
+  }catch(e){
+    // اگه شبکه قطع بود، DB رو دست نمی‌زنیم — همون حافظه رو نگه می‌داریم
+    console.warn('loadDB failed, keeping current DB in memory:',e);
+    throw e; // بالا propagate می‌کنیم تا caller بدونه
+  }
+
+  // فقط وقتی data موفق اومد DB رو آپدیت می‌کنیم
+  DB={users:{},teams:{},invites:[],deletedTeams:[],deletedTasks:{},chats:{}};
+
+  rows.forEach(row=>{
+    if(!row.data) return;
+    if(row.type==='user'){
+      DB.users[row.data.id]=row.data;
+    } else if(row.type==='team'){
+      DB.teams[row.data.id]=row.data;
+    } else if(row.type==='meta'){
+      DB.invites=row.data.invites||[];
+      DB.deletedTeams=row.data.deletedTeams||[];
+      DB.deletedTasks=row.data.deletedTasks||{};
+    } else if(row.type==='chat'){
+      const teamId=row.id.replace(/^chat_/,'');
+      DB.chats[teamId]=row.data;
+    }
+  });
+
+  // اعمال deletedTeams و deletedTasks
+  DB.deletedTeams.forEach(id=>{delete DB.teams[id]});
+  Object.entries(DB.deletedTasks).forEach(([teamId,ids])=>{
+    const t=DB.teams[teamId];
+    if(t) t.tasks=(t.tasks||[]).filter(task=>!ids.includes(task.id));
+  });
+  // اعمال removedMembers
+  Object.values(DB.teams).forEach(t=>{
+    const removed=t.removedMembers||[];
+    t.members=(t.members||[]).filter(mid=>!removed.includes(mid));
+    (t.tasks||[]).forEach(task=>{
+      if(task.assignees) task.assignees=task.assignees.filter(mid=>!removed.includes(mid));
+    });
+  });
+}
+
+function ldLocal(){
+  try{const s=localStorage.getItem('tfauth_sess');if(s)SESSION=JSON.parse(s);}catch(e){}
+  try{const u=localStorage.getItem('tfauth_ui');if(u)UI=JSON.parse(u);}catch(e){}
+}
+
+function showLoading(){
+  document.getElementById('APP').innerHTML=`<div class="auth-screen"><div class="auth-card" style="text-align:center">
+    <div class="auth-logo" style="margin-bottom:16px">Team<span>Flow</span></div>
+    <div style="color:var(--text2);font-size:13px;margin-bottom:18px">Connecting to database...</div>
+    <div style="display:flex;justify-content:center;gap:6px">
+      <span style="width:8px;height:8px;border-radius:50%;background:var(--acc);animation:dot 1.2s infinite 0s"></span>
+      <span style="width:8px;height:8px;border-radius:50%;background:var(--acc);animation:dot 1.2s infinite .2s"></span>
+      <span style="width:8px;height:8px;border-radius:50%;background:var(--acc);animation:dot 1.2s infinite .4s"></span>
+    </div>
+  </div></div>`;
+}
+
+function uid(){return '_'+Math.random().toString(36).slice(2,10)}
+function ini(n){return(n||'?').trim().split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)||'?'}
+function ac(n){let s=0;for(let i=0;i<(n||'').length;i++)s+=n.charCodeAt(i);return AC2[s%AC2.length]}
+function days(d){return Math.ceil((new Date(d)-Date.now())/(864e5))}
+function dlCls(d){const n=days(d);return n<0||n<=3?'dl-urg':n<=7?'dl-soon':'dl-ok'}
+function dlLbl(d){const n=days(d);if(n<0)return Math.abs(n)+'d overdue';if(n===0)return'Due today';if(n===1)return'Due tomorrow';return n+'d left'}
+function pColor(p){return{high:'var(--red)',medium:'var(--amb)',low:'var(--grn)'}[p]||'var(--text3)'}
+function fmt(ts){const d=new Date(ts),diff=Date.now()-d;if(diff<60000)return'just now';if(diff<3600000)return Math.floor(diff/60000)+'m ago';if(diff<86400000)return Math.floor(diff/3600000)+'h ago';return d.toLocaleDateString('en',{month:'short',day:'numeric'})}
+function me(){return DB.users[SESSION.userId]}
+function myTeams(){return Object.values(DB.teams).filter(t=>t.members&&t.members.includes(SESSION.userId))}
+function getTeam(){return UI.activeTeam?DB.teams[UI.activeTeam]:null}
+function myInvites(){return DB.invites.filter(i=>i.toUserId===SESSION.userId&&i.status==='pending')}
+function addAct(teamId,icon,iconBg,text){const t=DB.teams[teamId];if(!t)return;if(!t.activity)t.activity=[];t.activity.unshift({id:uid(),icon,iconBg,text,ts:Date.now()});if(t.activity.length>60)t.activity=t.activity.slice(0,60)}
+function addNotif(userId,text){if(!DB.users[userId])return;if(!DB.users[userId].notifs)DB.users[userId].notifs=[];DB.users[userId].notifs.unshift({id:uid(),text,read:false,ts:Date.now()});if(DB.users[userId].notifs.length>40)DB.users[userId].notifs=DB.users[userId].notifs.slice(0,40)}
+function myUnreadNotifs(){const u=me();return(u?.notifs||[]).filter(n=>!n.read).length}
+function myPendingInviteCount(){return myInvites().length}
+
+function render(){
+  if(!SESSION.userId||!DB.users[SESSION.userId]){renderAuth('login');return}
+  renderApp();
+}
+
+function renderAuth(mode){
+  document.getElementById('APP').innerHTML=`<div class="auth-screen">
+    <button class="btn-icon btn" onclick="toggleTheme()" title="Toggle theme" style="position:absolute;top:16px;right:16px" id="THEME_BTN_AUTH">
+      <i class="ti ${UI.theme==='light'?'ti-moon':'ti-sun'}" style="font-size:15px"></i>
+    </button>
+    <div class="auth-card">
+    <div class="auth-logo">Team<span>Flow</span></div>
+    <div class="auth-sub">Collaborate with your team, track tasks, meet deadlines.</div>
+    ${mode==='login'?`
+      <div class="auth-title">Sign in</div>
+      <div class="fg"><label>Username</label><div class="input-prefix"><span>@</span><input id="A_USER" placeholder="yourname" autocomplete="username"/></div></div>
+      <div class="fg"><label>Password</label><input type="password" id="A_PASS" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"/></div>
+      <div id="AUTH_ERR" style="color:var(--red);font-size:12px;margin-bottom:6px;min-height:16px"></div>
+      <div id="AUTH_INFO" style="color:var(--grn);font-size:12px;margin-bottom:10px;min-height:16px"></div>
+      <button class="btn btn-p" onclick="doLogin()">Sign in</button>
+      <div class="auth-switch">Don't have an account? <a onclick="renderAuth('register')">Create one</a></div>
+      <div class="auth-switch" style="margin-top:8px">Forgot password? <a onclick="renderAuth('forgot')">Reset it</a></div>
+      <div class="auth-switch" style="margin-top:8px">Didn't get the verification email? <a onclick="doResendVerification()">Resend it</a></div>
+    `:mode==='forgot'?`
+      <div class="auth-title">Forgot password</div>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:16px;line-height:1.5">Enter your username or email. We'll send you a link to reset your password.</p>
+      <div class="fg"><label>Username or Email</label><input id="A_IDENT" placeholder="yourname or you@example.com" onkeydown="if(event.key==='Enter')doForgotPassword()"/></div>
+      <div id="AUTH_ERR" style="color:var(--red);font-size:12px;margin-bottom:10px;min-height:16px"></div>
+      <button class="btn btn-p" onclick="doForgotPassword()">Send reset link</button>
+      <div class="auth-switch"><a onclick="renderAuth('login')">← Back to sign in</a></div>
+    `:mode==='reset-sent'?`
+      <div class="auth-title">Check your email</div>
+      <div style="text-align:center;padding:20px 0">
+        <div style="font-size:44px;margin-bottom:12px">📧</div>
+        <p style="font-size:13px;color:var(--text2);line-height:1.6">We sent a password reset link to your email.<br>Click the link to set a new password.</p>
+      </div>
+      <div class="auth-switch"><a onclick="renderAuth('login')">← Back to sign in</a></div>
+    `:mode==='set-new-password'?`
+      <div class="auth-title">Set new password</div>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:16px;line-height:1.5">Choose a new password for your account.</p>
+      <div class="fg"><label>New password</label><input type="password" id="A_PASS" placeholder="••••••••" autocomplete="new-password" onkeydown="if(event.key==='Enter')doSetNewPassword()"/></div>
+      <div class="fg"><label>Confirm password</label><input type="password" id="A_PASS2" placeholder="••••••••" onkeydown="if(event.key==='Enter')doSetNewPassword()"/></div>
+      <div id="AUTH_ERR" style="color:var(--red);font-size:12px;margin-bottom:10px;min-height:16px"></div>
+      <button class="btn btn-p" onclick="doSetNewPassword()">Set password</button>
+    `:mode==='verify-sent'?`
+      <div class="auth-title">Verify your email</div>
+      <div style="text-align:center;padding:20px 0">
+        <div style="font-size:44px;margin-bottom:12px">✉️</div>
+        <p style="font-size:13px;color:var(--text2);line-height:1.6">We sent a verification link to your email.<br>Click the link to activate your account, then sign in.</p>
+      </div>
+      <div class="auth-switch"><a onclick="renderAuth('login')">← Back to sign in</a></div>
+    `:mode==='verify-result'?`
+      <div class="auth-title">${window._verifyOk?'Email verified! ✅':'Verification failed'}</div>
+      <div style="text-align:center;padding:16px 0">
+        <p style="font-size:13px;color:var(--text2);line-height:1.6">${window._verifyOk?'Your account is now active. You can sign in.':'This link is invalid or expired.'}</p>
+      </div>
+      <button class="btn btn-p" onclick="renderAuth('login')">Go to sign in</button>
+    `:`
+      <div class="auth-title">Create account</div>
+      <div class="fg"><label>Display name</label><input id="A_DISPLAY" placeholder="Your full name"/></div>
+      <div class="fg"><label>Username</label><div class="input-prefix"><span>@</span><input id="A_USER" placeholder="choose_a_username" autocomplete="username"/></div><div class="hint" style="font-size:11px;color:var(--text3);margin-top:4px">Unique — teammates will use this to invite you</div></div>
+      <div class="fg"><label>Email</label><input type="email" id="A_EMAIL" placeholder="you@example.com" autocomplete="email"/><div class="hint" style="font-size:11px;color:var(--text3);margin-top:4px">Used for verification and password reset</div></div>
+      <div class="fg"><label>Password</label><input type="password" id="A_PASS" placeholder="••••••••" autocomplete="new-password" onkeydown="if(event.key==='Enter')doRegister()"/></div>
+      <div class="fg"><label>Role / Title</label><input id="A_ROLE" placeholder="e.g. Frontend Dev"/></div>
+      <div class="fg"><label>Skills</label><div class="chip-grid" id="REG_SKILLS">${SKILLS.map(s=>`<div class="chip" onclick="toggleRegSkill(this,'${s}')">${s}</div>`).join('')}</div></div>
+      <div class="fg"><label>Telegram Chat ID <span style="font-size:10px;color:var(--text3);font-weight:400">(optional)</span></label>
+        <input id="A_TG" placeholder="e.g. 1178362567"/>
+        <div class="hint">Get your Chat ID from <a href="https://t.me/userinfobot" target="_blank" style="color:var(--acc)">@userinfobot</a>, then start <a href="https://t.me/teamflow_notify_bot" target="_blank" style="color:var(--acc)">@teamflow_notify_bot</a></div>
+      </div>
+      <div id="AUTH_ERR" style="color:var(--red);font-size:12px;margin-bottom:10px;min-height:16px"></div>
+      <button class="btn btn-p" onclick="doRegister()">Create account</button>
+      <div class="auth-switch">Already have an account? <a onclick="renderAuth('login')">Sign in</a></div>
+    `}
+    </div>
+    <div class="auth-footer">© 2025 <span>Micko Team</span> — All rights reserved</div>
+  </div>`;
+  tmpSkills=[];
+}
+
+const regSkillsTmp=[];
+function toggleRegSkill(el,s){const i=regSkillsTmp.indexOf(s);if(i===-1){regSkillsTmp.push(s);el.classList.add('on')}else{regSkillsTmp.splice(i,1);el.classList.remove('on')}}
+
+// FIX: اگه ایمیل verification نرسید یا گم شد، کاربر می‌تونه دوباره درخواست بده
+async function doResendVerification(){
+  const username=document.getElementById('A_USER').value.trim().toLowerCase();
+  const err=document.getElementById('AUTH_ERR');
+  const info=document.getElementById('AUTH_INFO');
+  err.textContent='';info.textContent='';
+  if(!username){err.textContent='Please enter your username above first';return}
+  try{await loadDB();}catch(e){err.textContent='Could not connect. Try again.';return}
+  const found=Object.values(DB.users).find(u=>u.username===username);
+  // امنیت: پیام یکسان چه پیدا بشه چه نه، تا کسی نفهمه چه یوزرنیم‌هایی هست
+  if(!found||!found.email){
+    info.textContent='If this account exists, a verification email has been sent.';
+    return;
+  }
+  if(found.verified){
+    info.textContent='This account is already verified. You can sign in.';
+    return;
+  }
+  const sent=await sendVerificationEmail(found);
+  await svUser(found.id);
+  if(sent) info.textContent='Verification email sent! Check your inbox.';
+  else err.textContent='Could not send email right now. Please try again later.';
+}
+
+async function doLogin(){
+  const user=document.getElementById('A_USER').value.trim().toLowerCase();
+  const pass=document.getElementById('A_PASS').value;
+  const err=document.getElementById('AUTH_ERR');
+  err.textContent='';
+  try{await loadDB();}catch(e){console.error('Load error on login',e);}
+  const found=Object.values(DB.users).find(u=>u.username===user);
+  if(!found||found.password!==btoa(pass)){err.textContent='Wrong username or password';return}
+  if(found.verified===false){
+    err.textContent='Please verify your email first. Check your inbox for the verification link.';
+    return;
+  }
+  SESSION.userId=found.id;
+  const teams=myTeams();UI.activeTeam=teams[0]?.id||null;
+  saveLocal();renderApp();
+}
+
+async function doRegister(){
+  const display=document.getElementById('A_DISPLAY').value.trim();
+  const user=document.getElementById('A_USER').value.trim().toLowerCase().replace(/[^a-z0-9_]/g,'');
+  const email=document.getElementById('A_EMAIL').value.trim().toLowerCase();
+  const pass=document.getElementById('A_PASS').value;
+  const role=document.getElementById('A_ROLE').value.trim();
+  const err=document.getElementById('AUTH_ERR');
+  if(!display||!user||!email||!pass){err.textContent='Please fill all required fields';return}
+  if(user.length<3){err.textContent='Username must be at least 3 characters';return}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){err.textContent='Please enter a valid email address';return}
+  try{await loadDB()}catch(e){console.error('DB refresh before register failed',e)}
+  if(Object.values(DB.users).find(u=>u.username===user)){err.textContent='Username @'+user+' is already taken';return}
+  if(Object.values(DB.users).find(u=>u.email===email)){err.textContent='This email is already registered';return}
+  const id=uid();
+  const newUser={id,username:user,display:display,email,password:btoa(pass),role,skills:[...regSkillsTmp],telegramId:document.getElementById('A_TG')?.value.trim()||null,notifs:[],verified:false,created:Date.now()};
+  DB.users[id]=newUser;
+  regSkillsTmp.length=0;
+
+  const emailSent=await sendVerificationEmail(newUser);
+  const saved=await svUser(id);
+
+  if(!saved){err.textContent='Could not save account. Please try again.';return}
+  if(!emailSent){err.textContent='Account created, but verification email failed to send. Contact support.';return}
+
+  renderAuth('verify-sent');
+}
+
+function doLogout(){stopChatPolling();SESSION.userId=null;UI.activeTeam=null;UI.page='tasks';saveLocal();renderAuth('login')}
+
+// FIX: به‌جای reset مستقیم با یوزرنیم، حالا فقط لینک ایمیل درخواست میشه
+async function doForgotPassword(){
+  const ident=document.getElementById('A_IDENT').value.trim().toLowerCase();
+  const err=document.getElementById('AUTH_ERR');
+  err.textContent='';
+  if(!ident){err.textContent='Please enter your username or email';return}
+  try{await loadDB();}catch(e){err.textContent='Could not connect. Try again.';return}
+  const found=Object.values(DB.users).find(u=>u.username===ident||u.email===ident);
+  // امنیت: چه پیدا بشه چه نشه، همون پیام نشون بده تا کسی نفهمه چه ایمیل‌هایی ثبت‌نامن
+  if(found&&found.email){
+    const sent=await sendResetEmail(found);
+    await svUser(found.id);
+    if(!sent){err.textContent='Could not send email. Please try again later.';return}
+  }
+  renderAuth('reset-sent');
+}
+
+// وقتی از لینک ایمیل با ?reset=TOKEN&uid=ID وارد میشه
+async function doSetNewPassword(){
+  const pass=document.getElementById('A_PASS').value;
+  const pass2=document.getElementById('A_PASS2').value;
+  const err=document.getElementById('AUTH_ERR');
+  if(!pass){err.textContent='Please enter a new password';return}
+  if(pass!==pass2){err.textContent='Passwords do not match';return}
+  if(pass.length<4){err.textContent='Password must be at least 4 characters';return}
+  const {uid:userId,token}=window._resetParams||{};
+  if(!userId||!token){err.textContent='Invalid reset link';return}
+  try{await loadDB();}catch(e){err.textContent='Could not connect. Try again.';return}
+  const found=DB.users[userId];
+  if(!found||found.resetToken!==token){err.textContent='This reset link is invalid or already used';return}
+  if(!found.resetExpires||Date.now()>found.resetExpires){err.textContent='This reset link has expired. Please request a new one.';return}
+  found.password=btoa(pass);
+  found.resetToken=null;
+  found.resetExpires=null;
+  const ok=await svUser(userId);
+  if(ok){
+    window._resetParams=null;
+    history.replaceState({},'',getBaseUrl());
+    renderAuth('login');
+  }else{
+    err.textContent='Could not save. Try again.';
+  }
+}
+
+// وقتی از لینک ایمیل با ?verify=TOKEN&uid=ID وارد میشه
+async function handleVerifyLink(token,userId){
+  try{await loadDB();}catch(e){window._verifyOk=false;renderAuth('verify-result');return;}
+  const found=DB.users[userId];
+  if(!found||found.verifyToken!==token){window._verifyOk=false;renderAuth('verify-result');return;}
+  found.verified=true;
+  found.verifyToken=null;
+  await svUser(userId);
+  window._verifyOk=true;
+  history.replaceState({},'',getBaseUrl());
+  renderAuth('verify-result');
+}
+
+// چک کردن URL موقع لود صفحه برای verify/reset link ها
+function checkAuthLinkParams(){
+  const params=new URLSearchParams(window.location.search);
+  const verifyToken=params.get('verify');
+  const resetToken=params.get('reset');
+  const userId=params.get('uid');
+  if(verifyToken&&userId){
+    handleVerifyLink(verifyToken,userId);
+    return true;
+  }
+  if(resetToken&&userId){
+    window._resetParams={uid:userId,token:resetToken};
+    renderAuth('set-new-password');
+    return true;
+  }
+  return false;
+}
+
+function renderApp(){
+  const user=me();if(!user)return renderAuth('login');
+  const teams=myTeams();
+  const inviteCount=myPendingInviteCount();
+  const unread=myUnreadNotifs();
+  if(UI.activeTeam&&!DB.teams[UI.activeTeam])UI.activeTeam=teams[0]?.id||null;
+
+  document.getElementById('APP').innerHTML=`<div class="app-layout">
+    <nav class="navbar">
+      <div class="logo">Team<span>Flow</span></div>
+      <div class="nav-teams">${teams.map(t=>`
+        <div class="tpill${t.id===UI.activeTeam?' on':''}" onclick="setTeam('${t.id}')" style="${t.id===UI.activeTeam?`border-color:${t.color};background:${t.color}22;color:${t.color}`:''}">
+          <span style="width:6px;height:6px;border-radius:50%;background:${t.color}"></span>${t.name}
+        </div>`).join('')}
+      </div>
+      <!-- mobile team pill (tap to switch teams) -->
+      <div style="display:none;position:relative" class="mob-team-pill">
+        ${UI.activeTeam&&DB.teams[UI.activeTeam]?`
+        <div class="tpill on" onclick="toggleMobTeamMenu()" style="border-color:${DB.teams[UI.activeTeam].color};background:${DB.teams[UI.activeTeam].color}22;color:${DB.teams[UI.activeTeam].color};cursor:pointer">
+          <span style="width:6px;height:6px;border-radius:50%;background:${DB.teams[UI.activeTeam].color}"></span>${DB.teams[UI.activeTeam].name}
+          <i class="ti ti-chevron-down" style="font-size:11px;margin-left:2px"></i>
+        </div>`:teams.length?`
+        <div class="tpill" onclick="toggleMobTeamMenu()" style="cursor:pointer">
+          <i class="ti ti-users" style="font-size:12px"></i> Select team
+          <i class="ti ti-chevron-down" style="font-size:11px;margin-left:2px"></i>
+        </div>`:''}
+        <div id="MOB_TEAM_MENU" style="display:none;position:absolute;top:110%;left:0;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rl);padding:6px;min-width:180px;z-index:400;box-shadow:0 8px 24px rgba(0,0,0,.4)">
+          ${teams.map(t=>`
+          <div onclick="setTeam('${t.id}');toggleMobTeamMenu()" style="display:flex;align-items:center;gap:7px;padding:8px 10px;border-radius:var(--r);cursor:pointer;font-size:13px;font-weight:500;${t.id===UI.activeTeam?`background:${t.color}22;color:${t.color}`:'color:var(--text)'}">
+            <span style="width:7px;height:7px;border-radius:50%;background:${t.color};flex-shrink:0"></span>${t.name}
+          </div>`).join('')}
+          ${teams.length===0?`<div style="padding:8px 10px;font-size:12px;color:var(--text3)">No teams yet</div>`:''}
+        </div>
+      </div>
+      <div class="nb-right">
+        ${inviteCount?`<button class="btn btn-g btn-sm" onclick="setPage('invites')" style="color:var(--amb);border-color:var(--amb)"><i class="ti ti-mail" style="font-size:12px"></i> ${inviteCount} invite${inviteCount>1?'s':''}</button>`:''}
+        <button class="btn-icon btn" onclick="toggleTheme()" title="Toggle theme" id="THEME_BTN">
+          <i class="ti ${UI.theme==='light'?'ti-moon':'ti-sun'}" style="font-size:15px"></i>
+        </button>
+        <div class="notif-wrap">
+          <button class="btn-icon btn" onclick="setPage('notifs')" aria-label="Notifications">
+            <i class="ti ti-bell" style="font-size:15px"></i>
+            ${unread?`<span class="notif-dot"></span>`:''}
+          </button>
+        </div>
+        <button class="btn btn-p btn-sm" onclick="openModal('createTeam')"><i class="ti ti-plus" style="font-size:12px"></i> New Team</button>
+        <div class="user-pill" onclick="setPage('profile')">
+          <div class="av av-xs" style="background:${ac(user.display)}22;color:${ac(user.display)}">${ini(user.display)}</div>
+          <span style="font-size:12px">@${user.username}</span>
+        </div>
+        <button class="btn-icon btn" onclick="doLogout()" title="Sign out"><i class="ti ti-logout" style="font-size:15px"></i></button>
+      </div>
+    </nav>
+    <div class="main-layout" id="MAIN_LAYOUT">
+      ${UI.activeTeam||UI.page==='invites'||UI.page==='notifs'||UI.page==='profile'?
+        `<div class="sidebar" id="SIDEBAR">${renderSidebar()}</div><div class="content" id="CONTENT">${renderPage()}</div>`
+        :`<div class="no-team-screen">
+          <i class="ti ti-users" style="font-size:50px;opacity:.25"></i>
+          <h2>Welcome, ${user.display.split(' ')[0]}!</h2>
+          <p style="max-width:300px;line-height:1.6">Create a team or wait for an invite from a teammate.</p>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-p" onclick="openModal('createTeam')"><i class="ti ti-plus"></i> Create team</button>
+            ${inviteCount?`<button class="btn btn-g" onclick="setPage('invites')" style="color:var(--amb);border-color:var(--amb)"><i class="ti ti-mail"></i> ${inviteCount} pending invite${inviteCount>1?'s':''}</button>`:''}
+          </div>
+        </div>`
+      }
+    </div>
+    <div class="footer">© 2025 <span>Micko Team</span> — All rights reserved</div>
+  </div>
+  <!-- Mobile bottom nav -->
+  <nav class="mob-nav">
+    <div class="mob-nav-inner">
+      <button class="mob-nav-btn${UI.page==='tasks'?' on':''}" onclick="setPage('tasks')">
+        <i class="ti ti-clipboard-list"></i>Tasks
+      </button>
+      <button class="mob-nav-btn${UI.page==='kanban'?' on':''}" onclick="setPage('kanban')">
+        <i class="ti ti-layout-columns"></i>Kanban
+      </button>
+      <button class="mob-nav-btn" onclick="toggleMobDrawer()">
+        <i class="ti ti-menu-2"></i>Menu
+      </button>
+      <div class="mob-nav-btn-wrap">
+        <button class="mob-nav-btn${UI.page==='notifs'?' on':''}" onclick="setPage('notifs')">
+          <i class="ti ti-bell"></i>Notifs
+        </button>
+        ${unread?`<span class="mob-badge"></span>`:''}
+      </div>
+      <button class="mob-nav-btn${UI.page==='profile'?' on':''}" onclick="setPage('profile')">
+        <i class="ti ti-user-circle"></i>Profile
+      </button>
+    </div>
+  </nav>
+  <!-- Mobile drawer -->
+  <div class="mob-drawer-overlay" id="MOB_OVERLAY" onclick="toggleMobDrawer()"></div>
+  <div class="mob-drawer" id="MOB_DRAWER">${UI.activeTeam||UI.page==='invites'?renderSidebar():''}<div class="footer" style="display:block;margin-top:14px;border-top:1px solid var(--border);background:none">© 2025 <span>Micko Team</span></div></div>
+  <button class="asst-fab" onclick="openAssistant()" title="Assistant"><i class="ti ti-sparkles"></i></button>`;
+}
+
+function renderSidebar(){
+  const team=getTeam();
+  const isOwner=team&&team.ownerId===SESSION.userId;
+  const pendingCount=isOwner&&team?(team.tasks||[]).filter(t=>t.status==='done'&&t.approved===false).length:0;
+  const pages=[
+    {id:'tasks',icon:'ti-clipboard-list',label:'Tasks',badge:pendingCount||(team?(team.tasks||[]).filter(t=>t.status!=='done').length:null),red:!!pendingCount},
+    {id:'kanban',icon:'ti-layout-columns',label:'Kanban'},
+    {id:'members',icon:'ti-users',label:'Members',badge:team?(team.members||[]).length:null},
+    {id:'ranking',icon:'ti-trophy',label:'Ranking'},
+    {id:'chat',icon:'ti-message-circle',label:'Team Chat'},
+    {id:'performance',icon:'ti-chart-dots',label:'Performance'},
+    {id:'activity',icon:'ti-activity',label:'Activity'},
+    {id:'analytics',icon:'ti-chart-bar',label:'Analytics'},
+    {id:'invites',icon:'ti-mail',label:'Invites',badge:myPendingInviteCount()||null,red:true},
+    {id:'notifs',icon:'ti-bell',label:'Notifications',badge:myUnreadNotifs()||null,red:true},
+    {id:'profile',icon:'ti-user-circle',label:'My Profile'},
+  ];
+  const overdueCount=team?(team.tasks||[]).filter(t=>t.status!=='done'&&t.deadline&&days(t.deadline)<0).length:0;
+  return `
+    <div>
+      <div class="sb-label">Navigation</div>
+      ${pages.map(p=>`<div class="nav-item${UI.page===p.id?' on':''}" onclick="setPage('${p.id}')">
+        <i class="ti ${p.icon}" aria-hidden="true"></i>${p.label}
+        ${p.badge?`<span class="nav-badge${p.red?' r':''}">${p.badge}</span>`:''}
+      </div>`).join('')}
+    </div>
+    ${team?`
+    <div class="divider"></div>
+    <div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <div class="sb-label" style="margin:0">Members</div>
+        <button class="btn btn-g btn-sm" style="padding:3px 7px;font-size:11px" onclick="openModal('inviteMember')"><i class="ti ti-user-plus"></i></button>
+      </div>
+      ${(team.members||[]).length===0?`<div style="font-size:12px;color:var(--text3);padding:4px">No members yet</div>`:
+        (team.members||[]).map(mid=>{
+          const m=DB.users[mid];if(!m)return'';
+          const tc=(team.tasks||[]).filter(t=>(t.assignees||[]).includes(mid)&&t.status!=='done').length;
+          const isMe=mid===SESSION.userId;
+          return `<div class="member-row${UI.memberFilter===mid?' on':''}" onclick="filterMember('${mid}')">
+            <div class="av av-xs" style="background:${ac(m.display)}22;color:${ac(m.display)}">${ini(m.display)}</div>
+            <div style="flex:1;min-width:0;font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${m.display}${isMe?' (you)':''}</div>
+            ${tc?`<span style="font-size:10px;padding:1px 5px;border-radius:20px;background:var(--bg5);color:var(--text2)">${tc}</span>`:''}
+          </div>`;}).join('')}
+    </div>
+    <div class="divider"></div>
+    <div>
+      <div class="sb-label">Deadlines</div>
+      ${(team.tasks||[]).filter(t=>t.status!=='done'&&t.deadline).sort((a,b)=>new Date(a.deadline)-new Date(b.deadline)).slice(0,4).map(t=>`
+        <div style="display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid var(--border)">
+          <span class="dl ${dlCls(t.deadline)}" style="width:60px;flex-shrink:0;font-size:10px">${dlLbl(t.deadline)}</span>
+          <span style="font-size:11px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1">${t.title}</span>
+        </div>`).join('')||`<div style="font-size:12px;color:var(--text3)">None upcoming</div>`}
+      ${overdueCount?`<div style="margin-top:5px;font-size:11px;color:var(--red);font-weight:500">${overdueCount} overdue</div>`:''}
+    </div>
+    <div style="margin-top:auto;padding-top:10px;display:flex;flex-direction:column;gap:5px">
+      <button class="btn btn-g btn-sm" style="width:100%;justify-content:center;font-size:11px" onclick="exportData()"><i class="ti ti-download"></i> Export</button>
+      <button class="btn btn-d btn-sm" style="width:100%;justify-content:center;font-size:11px" onclick="leaveTeam()"><i class="ti ti-door-exit"></i> Leave team</button>
+    </div>`:''}`;
+}
+
+function renderPage(){
+  if(UI.page==='tasks')return renderTasks();
+  if(UI.page==='kanban')return renderKanban();
+  if(UI.page==='members')return renderMembers();
+  if(UI.page==='ranking')return renderRanking();
+  if(UI.page==='chat')return renderChat();
+  if(UI.page==='performance')return renderPerformance();
+  if(UI.page==='activity')return renderActivity();
+  if(UI.page==='analytics')return renderAnalytics();
+  if(UI.page==='invites')return renderInvites();
+  if(UI.page==='notifs')return renderNotifs();
+  if(UI.page==='profile')return renderProfile();
+  return renderTasks();
+}
+
+function getRankInfo(pts){
+  if(pts>=600)return{label:'Diamond',icon:'💎',color:'#4da6ff',next:null,nextPts:null};
+  if(pts>=300)return{label:'Gold',icon:'🥇',color:'#f5a623',next:'Diamond',nextPts:600};
+  if(pts>=100)return{label:'Silver',icon:'🥈',color:'#9898aa',next:'Gold',nextPts:300};
+  return{label:'Bronze',icon:'🥉',color:'#cd7f32',next:'Silver',nextPts:100};
+}
+
+function calcPoints(memberId, team){
+  const tasks=(team.tasks||[]);
+  let pts=0;
+  tasks.forEach(t=>{
+    // فقط تسک‌های تایید شده امتیاز میدن (تسک‌های owner خودکار تایید میشن)
+    if(t.status==='done' && t.approved!==false && (t.assignees||[]).includes(memberId)){
+      const base=t.priority==='high'?15:t.priority==='low'?5:10;
+      pts+=base;
+      // bonus اگه قبل از deadline تموم شده
+      if(t.deadline && t.completedAt && new Date(t.completedAt)<=new Date(t.deadline)){
+        pts+=5;
+      }
+    }
+    // امتیاز comment
+    (t.comments||[]).forEach(c=>{if(c.authorId===memberId)pts+=2;});
+  });
+  return pts;
+}
+
+// ── Performance Analytics Engine (rule-based, no API) ────────────
+function analyzeMember(memberId, team){
+  const tasks=(team.tasks||[]).filter(t=>(t.assignees||[]).includes(memberId));
+  const done=tasks.filter(t=>t.status==='done');
+  const active=tasks.filter(t=>t.status==='inprogress');
+  const blocked=tasks.filter(t=>t.status==='blocked');
+  const overdue=tasks.filter(t=>t.status!=='done'&&t.deadline&&days(t.deadline)<0);
+
+  const total=tasks.length;
+  const completionRate=total?Math.round(done.length/total*100):0;
+
+  // میانگین زمان تکمیل (روز) — از created تا completedAt
+  let avgDays=null;
+  const timed=done.filter(t=>t.created&&t.completedAt);
+  if(timed.length){
+    const sum=timed.reduce((a,t)=>a+(t.completedAt-t.created)/864e5,0);
+    avgDays=Math.round(sum/timed.length*10)/10;
+  }
+
+  // وقت‌شناسی: چند درصد تسک‌های ددلاین‌دار سر وقت تموم شدن
+  const withDeadline=done.filter(t=>t.deadline&&t.completedAt);
+  let onTimeRate=null;
+  if(withDeadline.length){
+    const onTime=withDeadline.filter(t=>new Date(t.completedAt)<=new Date(t.deadline+'T23:59:59')).length;
+    onTimeRate=Math.round(onTime/withDeadline.length*100);
+  }
+
+  // روند: مقایسه نیمه دوم تسک‌های done با نیمه اول (بر اساس زمان تکمیل)
+  let trend='steady';
+  const doneSorted=[...done].filter(t=>t.completedAt).sort((a,b)=>a.completedAt-b.completedAt);
+  if(doneSorted.length>=4){
+    const half=Math.floor(doneSorted.length/2);
+    const firstHalf=doneSorted.slice(0,half);
+    const secondHalf=doneSorted.slice(half);
+    const rate=arr=>{const wd=arr.filter(t=>t.deadline);return wd.length?wd.filter(t=>new Date(t.completedAt)<=new Date(t.deadline+'T23:59:59')).length/wd.length:null;};
+    const r1=rate(firstHalf),r2=rate(secondHalf);
+    if(r1!==null&&r2!==null){
+      if(r2>r1+0.15)trend='improving';
+      else if(r2<r1-0.15)trend='declining';
+    }
+  }
+
+  // امتیاز سلامت (0-100): ترکیبی از completion, onTime, و جریمه overdue/blocked
+  let health=50;
+  health+=completionRate*0.3;              // تا +30
+  if(onTimeRate!==null)health+=onTimeRate*0.2; // تا +20
+  else health+=10;                          // اگه ددلاینی نبوده، خنثی
+  health-=overdue.length*8;                  // جریمه هر overdue
+  health-=blocked.length*4;                  // جریمه هر blocked
+  health=Math.max(0,Math.min(100,Math.round(health)));
+
+  // خلاصه متنی هوشمند
+  let summary,summaryColor;
+  if(total===0){summary='No tasks assigned yet';summaryColor='var(--text3)';}
+  else if(health>=80){summary='Excellent — reliable & on track';summaryColor='var(--grn)';}
+  else if(health>=60){summary='Good — steady performer';summaryColor='var(--blu)';}
+  else if(health>=40){summary='Needs attention — some delays';summaryColor='var(--amb)';}
+  else{summary='At risk — falling behind';summaryColor='var(--red)';}
+
+  if(overdue.length>0)summary+=` · ${overdue.length} overdue`;
+  if(trend==='improving')summary+=' · 📈 improving';
+  else if(trend==='declining')summary+=' · 📉 declining';
+
+  return{total,done:done.length,active:active.length,blocked:blocked.length,overdue:overdue.length,completionRate,avgDays,onTimeRate,trend,health,summary,summaryColor};
+}
+
+// ── Smart Assignee Suggestion ───────────────────────────────────
+function suggestAssignees(skill, team){
+  const members=(team.members||[]).map(mid=>DB.users[mid]).filter(Boolean);
+  const scored=members.map(m=>{
+    const perf=analyzeMember(m.id,team);
+    let score=0;
+    const reasons=[];
+
+    // ۱. تخصص: skill رو داره؟
+    const hasSkill=skill&&(m.skills||[]).includes(skill);
+    if(hasSkill){score+=40;reasons.push(`has ${skill} skill`);}
+
+    // ۲. بار کاری: کمتر تسک فعال = بهتر
+    const load=perf.active+perf.blocked;
+    if(load===0){score+=25;reasons.push('fully available');}
+    else if(load<=2){score+=15;reasons.push('light workload');}
+    else if(load<=4){score+=5;}
+    else{score-=10;reasons.push('busy');}
+
+    // ۳. قابلیت اعتماد: نرخ وقت‌شناسی
+    if(perf.onTimeRate!==null){
+      if(perf.onTimeRate>=80){score+=20;reasons.push('very reliable');}
+      else if(perf.onTimeRate>=60){score+=10;}
+      else if(perf.onTimeRate<40){score-=5;}
+    }
+
+    // ۴. سلامت کلی
+    score+=perf.health*0.15; // تا +15
+
+    // جریمه overdue
+    if(perf.overdue>0){score-=perf.overdue*5;reasons.push(`${perf.overdue} overdue`);}
+
+    return{member:m,score:Math.round(score),reasons,hasSkill,load,perf};
+  });
+
+  // مرتب‌سازی: اول کسانی که skill دارن، بعد امتیاز
+  scored.sort((a,b)=>{
+    if(a.hasSkill!==b.hasSkill)return b.hasSkill-a.hasSkill;
+    return b.score-a.score;
+  });
+  return scored;
+}
+
+// ── Personal Task Prioritization ─────────────────────────────────
+function prioritizeMyTasks(){
+  // همه تسک‌های من در همه تیم‌ها که هنوز done نشدن
+  const myTasks=[];
+  Object.values(DB.teams).forEach(team=>{
+    if(!team.members?.includes(SESSION.userId))return;
+    (team.tasks||[]).forEach(t=>{
+      if(t.status==='done')return;
+      if(!(t.assignees||[]).includes(SESSION.userId))return;
+      myTasks.push({task:t,team});
+    });
+  });
+
+  // امتیاز فوریت برای هر تسک
+  myTasks.forEach(item=>{
+    const t=item.task;
+    let urgency=0;
+    const reasons=[];
+
+    // ددلاین
+    if(t.deadline){
+      const d=days(t.deadline);
+      if(d<0){urgency+=100;reasons.push(`${Math.abs(d)}d overdue`);}
+      else if(d===0){urgency+=80;reasons.push('due today');}
+      else if(d===1){urgency+=60;reasons.push('due tomorrow');}
+      else if(d<=3){urgency+=40;reasons.push(`${d}d left`);}
+      else if(d<=7){urgency+=20;reasons.push(`${d}d left`);}
+      else{urgency+=5;reasons.push(`${d}d left`);}
+    }
+
+    // اولویت
+    if(t.priority==='high'){urgency+=30;reasons.push('high priority');}
+    else if(t.priority==='medium')urgency+=15;
+    else urgency+=5;
+
+    // پیشرفت: تسکی که نزدیک تمومه ارزش بستن داره
+    if(t.progress>=70){urgency+=15;reasons.push('almost done');}
+    else if(t.progress>=40)urgency+=8;
+
+    // in-progress یعنی داری روش کار می‌کنی
+    if(t.status==='inprogress'){urgency+=10;}
+
+    item.urgency=urgency;
+    item.reasons=reasons;
+    item.isBlocked=t.status==='blocked';
+  });
+
+  // بلاک‌شده‌ها جدا
+  const blocked=myTasks.filter(i=>i.isBlocked).sort((a,b)=>b.urgency-a.urgency);
+  const activeTasks=myTasks.filter(i=>!i.isBlocked).sort((a,b)=>b.urgency-a.urgency);
+
+  // دسته‌بندی
+  const now=[],week=[],later=[];
+  activeTasks.forEach(item=>{
+    const d=item.task.deadline?days(item.task.deadline):999;
+    if(d<0||d<=1||item.task.priority==='high'&&d<=3)now.push(item);
+    else if(d<=7)week.push(item);
+    else later.push(item);
+  });
+
+  return{now,week,later,blocked,total:myTasks.length};
+}
+
+// ── Assistant UI ─────────────────────────────────────────────────
+function openAssistant(){
+  const overlay=document.getElementById('ASSISTANT_ROOT');
+  overlay.innerHTML=`
+    <div class="asst-overlay open" onclick="closeAssistant()"></div>
+    <div class="asst-panel open">
+      <div class="asst-hdr">
+        <div class="asst-hdr-icon"><i class="ti ti-sparkles"></i></div>
+        <div style="flex:1"><div style="font-size:14px;font-weight:700">Assistant</div><div style="font-size:11px;color:var(--text2)">How can I help you today?</div></div>
+        <button class="btn-icon btn" onclick="closeAssistant()" style="padding:5px 7px"><i class="ti ti-x" style="font-size:15px"></i></button>
+      </div>
+      <div class="asst-body" id="ASST_BODY">${assistantMenu()}</div>
+    </div>`;
+}
+function closeAssistant(){document.getElementById('ASSISTANT_ROOT').innerHTML='';}
+
+function assistantMenu(){
+  const team=getTeam();
+  const role=team?getMyRole(team):null;
+  const canSeePerf=role==='owner'||role==='admin';
+  return `
+    <div class="asst-opt" onclick="asstShowMyDay()">
+      <div class="asst-opt-icon" style="background:var(--accg);color:var(--acc)">🎯</div>
+      <div style="flex:1"><div class="asst-opt-title">What should I work on today?</div><div class="asst-opt-desc">Prioritize my tasks by deadline & importance</div></div>
+      <i class="ti ti-chevron-right" style="color:var(--text3)"></i>
+    </div>
+    ${canSeePerf?`
+    <div class="asst-opt" onclick="asstShowInsights()">
+      <div class="asst-opt-icon" style="background:var(--ambg);color:var(--amb)">💡</div>
+      <div style="flex:1"><div class="asst-opt-title">Team insights & risks</div><div class="asst-opt-desc">Imbalance, bottlenecks, burnout & project risk</div></div>
+      <i class="ti ti-chevron-right" style="color:var(--text3)"></i>
+    </div>
+    <div class="asst-opt" onclick="asstShowWeekly()">
+      <div class="asst-opt-icon" style="background:var(--grng);color:var(--grn)">📅</div>
+      <div style="flex:1"><div class="asst-opt-title">Weekly summary</div><div class="asst-opt-desc">What happened in the last 7 days</div></div>
+      <i class="ti ti-chevron-right" style="color:var(--text3)"></i>
+    </div>
+    <div class="asst-opt" onclick="asstShowTeamPerf()">
+      <div class="asst-opt-icon" style="background:var(--blug);color:var(--blu)">📊</div>
+      <div style="flex:1"><div class="asst-opt-title">Show team performance</div><div class="asst-opt-desc">Overall performance & who needs attention</div></div>
+      <i class="ti ti-chevron-right" style="color:var(--text3)"></i>
+    </div>
+    <div class="asst-opt" onclick="asstShowMemberPick()">
+      <div class="asst-opt-icon" style="background:var(--grng);color:var(--grn)">👤</div>
+      <div style="flex:1"><div class="asst-opt-title">Analyze a member</div><div class="asst-opt-desc">Deep-dive into one person's performance</div></div>
+      <i class="ti ti-chevron-right" style="color:var(--text3)"></i>
+    </div>`:''}`;
+}
+
+function asstBack(){document.getElementById('ASST_BODY').innerHTML=assistantMenu();}
+
+function asstShowMyDay(){
+  const body=document.getElementById('ASST_BODY');
+  const plan=prioritizeMyTasks();
+  if(plan.total===0){
+    body.innerHTML=`<div class="asst-back" onclick="asstBack()"><i class="ti ti-arrow-left"></i> Back</div>
+      <div style="text-align:center;padding:30px 10px;color:var(--text2)"><div style="font-size:40px;margin-bottom:10px">🎉</div><div style="font-size:14px;font-weight:600">You're all caught up!</div><div style="font-size:12px;color:var(--text3);margin-top:4px">No pending tasks assigned to you.</div></div>`;
+    return;
+  }
+  const grp=(items,label,color,icon,hint)=>{
+    if(items.length===0)return'';
+    return `<div class="asst-plan-group">
+      <div class="asst-plan-label" style="color:${color}">${icon} ${label} <span style="color:var(--text3);font-weight:400;text-transform:none">· ${items.length}</span></div>
+      ${items.map(i=>`<div class="asst-task" onclick="asstOpenTask('${i.team.id}','${i.task.id}')">
+        <div class="asst-task-title">${i.task.title}</div>
+        <div class="asst-task-reason"><span style="color:${color}">${i.reasons.slice(0,2).join(' · ')}</span> · ${i.team.name}</div>
+      </div>`).join('')}
+    </div>`;
+  };
+  let intro='';
+  if(plan.now.length)intro=`You have <b>${plan.now.length}</b> task${plan.now.length>1?'s':''} that need attention right away.`;
+  else if(plan.week.length)intro=`Nothing critical today — focus on your <b>${plan.week.length}</b> task${plan.week.length>1?'s':''} due this week.`;
+  else intro=`You're in good shape! Just some tasks for later.`;
+
+  body.innerHTML=`<div class="asst-back" onclick="asstBack()"><i class="ti ti-arrow-left"></i> Back</div>
+    <div style="font-size:13px;color:var(--text2);line-height:1.5;margin-bottom:14px;padding:10px;background:var(--accg);border-radius:10px">${intro}</div>
+    ${grp(plan.now,'Do now','var(--red)','🔴','')}
+    ${grp(plan.week,'This week','var(--amb)','🟡','')}
+    ${grp(plan.later,'Later','var(--grn)','🟢','')}
+    ${plan.blocked.length?grp(plan.blocked,'Blocked','var(--text3)','⛔',''):''}`;
+}
+
+function asstOpenTask(teamId,taskId){
+  closeAssistant();
+  UI.activeTeam=teamId;UI.page='tasks';
+  renderApp();
+  setTimeout(()=>openModal('viewTask',taskId),100);
+}
+
+function asstShowTeamPerf(){
+  const body=document.getElementById('ASST_BODY');
+  const team=getTeam();
+  if(!team){body.innerHTML=`<div class="asst-back" onclick="asstBack()"><i class="ti ti-arrow-left"></i> Back</div><div style="padding:20px;color:var(--text3);text-align:center">Select a team first</div>`;return;}
+  const allPerf=(team.members||[]).map(mid=>({m:DB.users[mid],p:analyzeMember(mid,team)})).filter(x=>x.m);
+  const avgHealth=allPerf.length?Math.round(allPerf.reduce((a,x)=>a+x.p.health,0)/allPerf.length):0;
+  const atRisk=allPerf.filter(x=>x.p.health<40);
+  const top=allPerf.filter(x=>x.p.health>=80);
+  const totalOverdue=allPerf.reduce((a,x)=>a+x.p.overdue,0);
+
+  let verdict,vColor;
+  if(avgHealth>=75){verdict='Your team is performing great! 🎉';vColor='var(--grn)';}
+  else if(avgHealth>=55){verdict='Team is doing okay, with room to improve.';vColor='var(--blu)';}
+  else{verdict='Team needs attention — several members are struggling.';vColor='var(--amb)';}
+
+  body.innerHTML=`<div class="asst-back" onclick="asstBack()"><i class="ti ti-arrow-left"></i> Back</div>
+    <div style="font-size:13px;color:${vColor};font-weight:600;line-height:1.5;margin-bottom:14px;padding:12px;background:var(--bg3);border-radius:10px;border-left:3px solid ${vColor}">${verdict}</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
+      <div style="background:var(--bg3);border-radius:10px;padding:11px;text-align:center"><div style="font-size:22px;font-weight:800;color:${healthColor(avgHealth)}">${avgHealth}</div><div style="font-size:10px;color:var(--text3)">team performance</div></div>
+      <div style="background:var(--bg3);border-radius:10px;padding:11px;text-align:center"><div style="font-size:22px;font-weight:800;color:${totalOverdue?'var(--red)':'var(--grn)'}">${totalOverdue}</div><div style="font-size:10px;color:var(--text3)">overdue tasks</div></div>
+    </div>
+    ${top.length?`<div class="asst-plan-group"><div class="asst-plan-label" style="color:var(--grn)">⭐ Top performers</div>${top.slice(0,3).map(x=>`<div class="asst-task"><div class="asst-task-title">${x.m.display}</div><div class="asst-task-reason">Performance ${x.p.health} · ${x.p.completionRate}% completion</div></div>`).join('')}</div>`:''}
+    ${atRisk.length?`<div class="asst-plan-group"><div class="asst-plan-label" style="color:var(--red)">⚠️ Needs attention</div>${atRisk.slice(0,3).map(x=>`<div class="asst-task"><div class="asst-task-title">${x.m.display}</div><div class="asst-task-reason" style="color:var(--red)">${x.p.summary}</div></div>`).join('')}</div>`:''}
+    <div style="text-align:center;margin-top:8px"><span class="asst-back" onclick="closeAssistant();setPage('performance')" style="margin:0"><i class="ti ti-external-link"></i> Open full dashboard</span></div>`;
+}
+
+function asstShowMemberPick(){
+  const body=document.getElementById('ASST_BODY');
+  const team=getTeam();
+  if(!team){body.innerHTML=`<div class="asst-back" onclick="asstBack()"><i class="ti ti-arrow-left"></i> Back</div><div style="padding:20px;color:var(--text3);text-align:center">Select a team first</div>`;return;}
+  body.innerHTML=`<div class="asst-back" onclick="asstBack()"><i class="ti ti-arrow-left"></i> Back</div>
+    <div style="font-size:12px;color:var(--text2);margin-bottom:10px">Pick a member to analyze:</div>
+    ${(team.members||[]).map(mid=>{const m=DB.users[mid];if(!m)return'';return`
+      <div class="asst-opt" onclick="asstShowMember('${mid}')" style="margin-bottom:6px">
+        <div class="av av-sm" style="background:${ac(m.display)}22;color:${ac(m.display)}">${ini(m.display)}</div>
+        <div style="flex:1"><div class="asst-opt-title">${m.display}</div><div class="asst-opt-desc">@${m.username}</div></div>
+        <i class="ti ti-chevron-right" style="color:var(--text3)"></i>
+      </div>`;}).join('')}`;
+}
+
+function asstShowMember(mid){
+  const body=document.getElementById('ASST_BODY');
+  const team=getTeam();const m=DB.users[mid];if(!team||!m)return;
+  const p=analyzeMember(mid,team);
+  body.innerHTML=`<div class="asst-back" onclick="asstShowMemberPick()"><i class="ti ti-arrow-left"></i> Back</div>
+    <div style="display:flex;align-items:center;gap:11px;margin-bottom:14px">
+      <div class="av av-md" style="background:${ac(m.display)}22;color:${ac(m.display)}">${ini(m.display)}</div>
+      <div style="flex:1"><div style="font-weight:700;font-size:15px">${m.display}</div><div style="font-size:12px;color:${p.summaryColor};font-weight:500">${p.summary}</div></div>
+      <div style="text-align:center"><div style="font-size:24px;font-weight:800;color:${healthColor(p.health)}">${p.health}</div><div style="font-size:9px;color:var(--text3)">PERFORMANCE</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+      <div style="background:var(--bg3);border-radius:10px;padding:10px"><div style="font-size:11px;color:var(--text3)">Completion</div><div style="font-size:16px;font-weight:700;color:var(--grn)">${p.completionRate}%</div></div>
+      <div style="background:var(--bg3);border-radius:10px;padding:10px"><div style="font-size:11px;color:var(--text3)">On-time rate</div><div style="font-size:16px;font-weight:700;color:${p.onTimeRate===null?'var(--text3)':p.onTimeRate>=70?'var(--grn)':'var(--amb)'}">${p.onTimeRate===null?'—':p.onTimeRate+'%'}</div></div>
+      <div style="background:var(--bg3);border-radius:10px;padding:10px"><div style="font-size:11px;color:var(--text3)">Active tasks</div><div style="font-size:16px;font-weight:700;color:var(--blu)">${p.active}</div></div>
+      <div style="background:var(--bg3);border-radius:10px;padding:10px"><div style="font-size:11px;color:var(--text3)">Overdue</div><div style="font-size:16px;font-weight:700;color:${p.overdue?'var(--red)':'var(--text2)'}">${p.overdue}</div></div>
+    </div>
+    <div style="font-size:12px;color:var(--text2);line-height:1.6;padding:11px;background:var(--accg);border-radius:10px">
+      ${asstMemberAdvice(p,m)}
+    </div>`;
+}
+
+function asstShowInsights(){
+  const body=document.getElementById('ASST_BODY');
+  const team=getTeam();
+  if(!team){body.innerHTML=`<div class="asst-back" onclick="asstBack()"><i class="ti ti-arrow-left"></i> Back</div><div style="padding:20px;color:var(--text3);text-align:center">Select a team first</div>`;return;}
+  const insights=generateTeamInsights(team);
+  body.innerHTML=`<div class="asst-back" onclick="asstBack()"><i class="ti ti-arrow-left"></i> Back</div>
+    <div style="font-size:13px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:6px"><span>💡</span> Team Insights</div>
+    ${insights.map(ins=>`
+      <div style="background:var(--bg3);border:1px solid var(--border);border-left:3px solid ${ins.color};border-radius:10px;padding:12px;margin-bottom:9px">
+        <div style="font-size:12.5px;font-weight:700;color:${ins.color};margin-bottom:5px;display:flex;align-items:center;gap:6px"><span>${ins.icon}</span> ${ins.title}</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.55">${ins.text}</div>
+      </div>`).join('')}`;
+}
+
+function asstShowWeekly(){
+  const body=document.getElementById('ASST_BODY');
+  const team=getTeam();
+  if(!team){body.innerHTML=`<div class="asst-back" onclick="asstBack()"><i class="ti ti-arrow-left"></i> Back</div><div style="padding:20px;color:var(--text3);text-align:center">Select a team first</div>`;return;}
+  const s=generateWeeklySummary(team);
+  let headline;
+  if(s.completed===0&&s.created===0)headline='Quiet week — not much activity.';
+  else if(s.completed>=s.created)headline=`Productive week! ${s.completed} task${s.completed!==1?'s':''} completed. 🎉`;
+  else headline=`Busy week — more tasks created than finished.`;
+
+  body.innerHTML=`<div class="asst-back" onclick="asstBack()"><i class="ti ti-arrow-left"></i> Back</div>
+    <div style="font-size:13px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:6px"><span>📅</span> Last 7 Days</div>
+    <div style="font-size:12px;color:var(--text2);margin-bottom:14px">${headline}</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px">
+      <div style="background:var(--grng);border-radius:10px;padding:12px;text-align:center"><div style="font-size:22px;font-weight:800;color:var(--grn)">${s.completed}</div><div style="font-size:10px;color:var(--text3)">completed</div></div>
+      <div style="background:var(--accg);border-radius:10px;padding:12px;text-align:center"><div style="font-size:22px;font-weight:800;color:var(--acc)">${s.created}</div><div style="font-size:10px;color:var(--text3)">created</div></div>
+      <div style="background:${s.overdue?'var(--redg)':'var(--bg3)'};border-radius:10px;padding:12px;text-align:center"><div style="font-size:22px;font-weight:800;color:${s.overdue?'var(--red)':'var(--text2)'}">${s.overdue}</div><div style="font-size:10px;color:var(--text3)">overdue</div></div>
+    </div>
+    ${s.topPerformer?`<div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px;display:flex;align-items:center;gap:10px">
+      <div style="font-size:24px">🏆</div>
+      <div><div style="font-size:11px;color:var(--text3)">Top performer this week</div><div style="font-size:14px;font-weight:700">${s.topPerformer.display}</div><div style="font-size:11px;color:var(--grn)">${s.topCount} task${s.topCount!==1?'s':''} completed</div></div>
+    </div>`:`<div style="font-size:12px;color:var(--text3);text-align:center;padding:12px">No completed tasks this week yet.</div>`}`;
+}
+
+function asstMemberAdvice(p,m){
+  const tips=[];
+  if(p.total===0)return `${m.display.split(' ')[0]} has no tasks assigned yet. Consider giving them something to work on.`;
+  if(p.overdue>0)tips.push(`has ${p.overdue} overdue task${p.overdue>1?'s':''} — may need help or a deadline check`);
+  if(p.active>5)tips.push('is juggling a lot of active tasks — consider rebalancing their workload');
+  if(p.onTimeRate!==null&&p.onTimeRate<50)tips.push('often misses deadlines — deadlines might be too tight');
+  if(p.trend==='improving')tips.push('is trending upward — great momentum! 📈');
+  if(p.trend==='declining')tips.push('performance is slipping lately — worth a check-in');
+  if(p.health>=80&&tips.length===0)tips.push('is a reliable, strong performer — great to have on the team! ⭐');
+  if(tips.length===0)tips.push('is performing steadily with no red flags');
+  return `<b>${m.display.split(' ')[0]}</b> ${tips.join('. ')}.`;
+}
+
+// ── Team Insights Engine (6 analyses) ────────────────────────────
+function generateTeamInsights(team){
+  const insights=[];
+  const members=(team.members||[]).map(mid=>DB.users[mid]).filter(Boolean);
+  const tasks=team.tasks||[];
+  const activeTasks=tasks.filter(t=>t.status!=='done');
+
+  // ── ۱. عدم تعادل تیم (Workload Imbalance) ──
+  const loadPerMember=members.map(m=>({
+    m, load:activeTasks.filter(t=>(t.assignees||[]).includes(m.id)).length
+  }));
+  const totalLoad=loadPerMember.reduce((a,x)=>a+x.load,0);
+  if(totalLoad>0&&members.length>=2){
+    const sorted=[...loadPerMember].sort((a,b)=>b.load-a.load);
+    const top=sorted[0], idle=sorted.filter(x=>x.load===0);
+    const topShare=top.load/totalLoad;
+    if(topShare>=0.5&&top.load>=3){
+      insights.push({
+        type:'imbalance',icon:'⚖️',color:'var(--amb)',
+        title:'Workload imbalance',
+        text:`<b>${top.m.display}</b> is handling ${Math.round(topShare*100)}% of all active tasks (${top.load} tasks)${idle.length?`, while ${idle.length} member${idle.length>1?'s are':' is'} idle`:''}. Consider redistributing.`
+      });
+    } else if(idle.length>=Math.ceil(members.length/2)&&totalLoad>=members.length){
+      insights.push({
+        type:'imbalance',icon:'⚖️',color:'var(--amb)',
+        title:'Uneven distribution',
+        text:`${idle.length} of ${members.length} members have no active tasks. Work is concentrated on a few people.`
+      });
+    }
+  }
+
+  // ── ۲. پیش‌بینی ریسک پروژه (Deadline Risk) ──
+  // برای هر عضو: سرعت متوسط (تسک در روز) رو حساب کن و ببین چند تا تسک تا ددلاین ممکنه عقب بمونه
+  let atRiskCount=0;
+  const riskTasks=[];
+  activeTasks.forEach(t=>{
+    if(!t.deadline)return;
+    const d=days(t.deadline);
+    if(d<0){atRiskCount++;riskTasks.push(t);return;}
+    // تخمین: اگه ددلاین نزدیکه و پیشرفت کمه
+    if(d<=3&&(t.progress||0)<40){atRiskCount++;riskTasks.push(t);}
+  });
+  if(atRiskCount>0){
+    insights.push({
+      type:'risk',icon:'🎯',color:'var(--red)',
+      title:'Project risk',
+      text:`<b>${atRiskCount} task${atRiskCount>1?'s are':' is'}</b> likely to miss ${atRiskCount>1?'their':'its'} deadline (overdue or low progress with little time left). ${riskTasks.slice(0,2).map(t=>`"${t.title}"`).join(', ')}${riskTasks.length>2?'…':''}`
+    });
+  }
+
+  // ── ۳. تشخیص Skill Gap ──
+  // برای هر skill که توی تسک‌های فعال لازمه، ببین چند نفر اون skill رو دارن
+  const skillDemand={};
+  activeTasks.forEach(t=>{if(t.skills)skillDemand[t.skills]=(skillDemand[t.skills]||0)+1;});
+  Object.entries(skillDemand).forEach(([skill,demand])=>{
+    const supply=members.filter(m=>(m.skills||[]).includes(skill)).length;
+    if(demand>=3&&supply<=1){
+      insights.push({
+        type:'skillgap',icon:'🧩',color:'var(--blu)',
+        title:`Skill bottleneck: ${skill}`,
+        text:`${demand} active tasks need <b>${skill}</b>, but only ${supply} member${supply===1?' has':'s have'} this skill. This is a bottleneck — consider training or hiring.`
+      });
+    }
+  });
+
+  // ── ۴. خطر Burnout ──
+  const memberPerfs=members.map(m=>({m,p:analyzeMember(m.id,team),load:activeTasks.filter(t=>(t.assignees||[]).includes(m.id)).length}));
+  const avgLoad=totalLoad/Math.max(1,members.length);
+  memberPerfs.forEach(({m,p,load})=>{
+    // بار کاری بالای دو برابر میانگین + روند نزولی یا تأخیر
+    if(load>=avgLoad*2&&load>=4){
+      const declining=p.trend==='declining'||(p.onTimeRate!==null&&p.onTimeRate<60);
+      if(declining){
+        insights.push({
+          type:'burnout',icon:'🔥',color:'var(--red)',
+          title:'Burnout risk',
+          text:`<b>${m.display}</b> has ${load} active tasks (${Math.round(load/avgLoad)}× the team average) and their reliability is dropping. They may be overloaded — check in with them.`
+        });
+      } else {
+        insights.push({
+          type:'burnout',icon:'⚠️',color:'var(--amb)',
+          title:'Heavy workload',
+          text:`<b>${m.display}</b> is carrying ${load} active tasks — well above average. Keep an eye on them to prevent burnout.`
+        });
+      }
+    }
+  });
+
+  // اگه هیچ مشکلی نبود
+  if(insights.length===0){
+    insights.push({
+      type:'ok',icon:'✅',color:'var(--grn)',
+      title:'All looks healthy',
+      text:'No major risks detected. Workload is balanced, no critical bottlenecks, and no one appears overloaded. Great job! 🎉'
+    });
+  }
+
+  return insights;
+}
+
+// ── ۵. خلاصه هفتگی ──
+function generateWeeklySummary(team){
+  const weekAgo=Date.now()-7*864e5;
+  const tasks=team.tasks||[];
+  const completedThisWeek=tasks.filter(t=>t.status==='done'&&t.completedAt&&t.completedAt>=weekAgo);
+  const createdThisWeek=tasks.filter(t=>t.created&&t.created>=weekAgo);
+  const overdueNow=tasks.filter(t=>t.status!=='done'&&t.deadline&&days(t.deadline)<0);
+
+  // بهترین عملکرد این هفته (بیشترین تسک done)
+  const doneByMember={};
+  completedThisWeek.forEach(t=>{(t.assignees||[]).forEach(mid=>{doneByMember[mid]=(doneByMember[mid]||0)+1;});});
+  let topPerformer=null,topCount=0;
+  Object.entries(doneByMember).forEach(([mid,cnt])=>{if(cnt>topCount){topCount=cnt;topPerformer=DB.users[mid];}});
+
+  return{
+    completed:completedThisWeek.length,
+    created:createdThisWeek.length,
+    overdue:overdueNow.length,
+    topPerformer,topCount
+  };
+}
+
+// ── ۶. پیشنهاد ددلاین واقع‌بینانه ──
+function suggestDeadline(skill, team){
+  // بر اساس بار کاری فعلی افرادی که این skill رو دارن + میانگین زمان تکمیل تیم
+  const members=(team.members||[]).map(mid=>DB.users[mid]).filter(Boolean);
+  const capable=skill?members.filter(m=>(m.skills||[]).includes(skill)):members;
+  const pool=capable.length?capable:members;
+
+  // میانگین بار کاری این افراد
+  const activeTasks=(team.tasks||[]).filter(t=>t.status!=='done');
+  const avgLoad=pool.length?pool.reduce((a,m)=>a+activeTasks.filter(t=>(t.assignees||[]).includes(m.id)).length,0)/pool.length:0;
+
+  // میانگین زمان تکمیل تیم (روز)
+  const doneTimed=(team.tasks||[]).filter(t=>t.status==='done'&&t.created&&t.completedAt);
+  let avgCompletionDays=3; // پیش‌فرض
+  if(doneTimed.length){
+    avgCompletionDays=doneTimed.reduce((a,t)=>a+(t.completedAt-t.created)/864e5,0)/doneTimed.length;
+  }
+
+  // تخمین: زمان پایه + جریمه بار کاری
+  const suggested=Math.max(2,Math.ceil(avgCompletionDays+avgLoad*1.5));
+  return{days:suggested,avgLoad:Math.round(avgLoad*10)/10,avgCompletionDays:Math.round(avgCompletionDays*10)/10,poolSize:pool.length,hasSkill:capable.length>0};
+}
+
+function renderRanking(){
+  const team=getTeam();if(!team)return`<div class="empty"><i class="ti ti-trophy"></i>Select a team</div>`;
+  const members=(team.members||[]).map(mid=>{
+    const m=DB.users[mid];if(!m)return null;
+    const pts=calcPoints(mid,team);
+    const rank=getRankInfo(pts);
+    const done=(team.tasks||[]).filter(t=>t.status==='done'&&(t.assignees||[]).includes(mid)).length;
+    const total=(team.tasks||[]).filter(t=>(t.assignees||[]).includes(mid)).length;
+    return{...m,pts,rank,done,total};
+  }).filter(Boolean).sort((a,b)=>b.pts-a.pts);
+
+  const myData=members.find(m=>m.id===SESSION.userId);
+  const myRank=members.findIndex(m=>m.id===SESSION.userId)+1;
+
+  return `
+  <div class="page-hdr"><div class="page-title">🏆 Ranking</div></div>
+
+  ${myData?`
+  <div style="background:var(--bg2);border:2px solid ${myData.rank.color};border-radius:var(--rl);padding:16px;margin-bottom:18px;display:flex;align-items:center;gap:14px">
+    <div style="font-size:40px">${myData.rank.icon}</div>
+    <div style="flex:1">
+      <div style="font-size:13px;color:var(--text2);margin-bottom:2px">Your rank</div>
+      <div style="font-size:20px;font-weight:700;color:${myData.rank.color}">${myData.rank.label}</div>
+      <div style="font-size:12px;color:var(--text2);margin-top:2px">${myData.pts} pts · #${myRank} in team</div>
+      ${myData.rank.nextPts?`
+      <div style="margin-top:8px">
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-bottom:4px">
+          <span>Progress to ${myData.rank.next}</span>
+          <span>${myData.pts}/${myData.rank.nextPts}</span>
+        </div>
+        <div class="prog-bar" style="height:5px"><div class="prog-fill" style="width:${Math.min(100,Math.round(myData.pts/myData.rank.nextPts*100))}%;background:${myData.rank.color}"></div></div>
+      </div>`:'<div style="margin-top:6px;font-size:12px;color:#4da6ff;font-weight:600">✨ Max rank achieved!</div>'}
+    </div>
+  </div>`:''}
+
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden">
+    <div class="rank-row rank-hdr">
+      <span>#</span><span>Member</span><span style="text-align:center">Tasks</span><span style="text-align:center">Done</span><span style="text-align:right">Points</span>
+    </div>
+    ${members.map((m,i)=>{
+      const isMe=m.id===SESSION.userId;
+      const medals=['🥇','🥈','🥉'];
+      return`<div class="rank-row" style="border-bottom:1px solid var(--border);background:${isMe?'var(--accg)':'transparent'}">
+        <div style="font-size:16px;text-align:center">${i<3?medals[i]:`<span style="font-size:12px;color:var(--text3)">${i+1}</span>`}</div>
+        <div style="display:flex;align-items:center;gap:8px;min-width:0">
+          <div class="av av-sm" style="background:${ac(m.display)}22;color:${ac(m.display)};flex-shrink:0">${ini(m.display)}</div>
+          <div style="min-width:0">
+            <div style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${m.display}${isMe?' <span style="font-size:10px;color:var(--acc)">you</span>':''}</div>
+            <div style="font-size:11px;color:${m.rank.color}">${m.rank.icon} ${m.rank.label}</div>
+          </div>
+        </div>
+        <div style="text-align:center;font-size:13px;color:var(--text2)">${m.total}</div>
+        <div style="text-align:center;font-size:13px;color:var(--grn);font-weight:600">${m.done}</div>
+        <div style="text-align:right;font-size:14px;font-weight:700;color:${m.rank.color}">${m.pts}</div>
+      </div>`;
+    }).join('')}
+    ${members.length===0?`<div class="empty"><i class="ti ti-users"></i>No members yet</div>`:''}
+  </div>
+
+  <div style="margin-top:14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:14px">
+    <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:10px">How points are earned</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px">
+      <div style="font-size:12px;color:var(--text2);display:flex;align-items:center;gap:6px"><span style="color:var(--grn);font-weight:700">+10</span> Complete a task</div>
+      <div style="font-size:12px;color:var(--text2);display:flex;align-items:center;gap:6px"><span style="color:var(--red);font-weight:700">+15</span> High priority task</div>
+      <div style="font-size:12px;color:var(--text2);display:flex;align-items:center;gap:6px"><span style="color:var(--grn);font-weight:700">+5</span> Low priority task</div>
+      <div style="font-size:12px;color:var(--text2);display:flex;align-items:center;gap:6px"><span style="color:var(--amb);font-weight:700">+5</span> Before deadline bonus</div>
+      <div style="font-size:12px;color:var(--text2);display:flex;align-items:center;gap:6px"><span style="color:var(--acc);font-weight:700">+2</span> Leave a comment</div>
+    </div>
+    <div style="margin-top:10px;border-top:1px solid var(--border);padding-top:10px;display:flex;gap:14px;flex-wrap:wrap">
+      ${[{icon:'🥉',label:'Bronze',pts:'0',color:'#cd7f32'},{icon:'🥈',label:'Silver',pts:'100',color:'#9898aa'},{icon:'🥇',label:'Gold',pts:'300',color:'#f5a623'},{icon:'💎',label:'Diamond',pts:'600',color:'#4da6ff'}].map(r=>`
+      <div style="display:flex;align-items:center;gap:5px;font-size:12px">
+        <span style="font-size:16px">${r.icon}</span>
+        <span style="color:${r.color};font-weight:600">${r.label}</span>
+        <span style="color:var(--text3)">${r.pts}+ pts</span>
+      </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+function renderTasks(){
+  const team=getTeam();if(!team)return`<div class="empty"><i class="ti ti-users"></i>Select a team</div>`;
+  let tasks=team.tasks||[];
+  if(UI.memberFilter)tasks=tasks.filter(t=>(t.assignees||[]).includes(UI.memberFilter));
+  if(UI.filter!=='all')tasks=tasks.filter(t=>t.status===UI.filter);
+  if(UI.searchQ){const q=UI.searchQ.toLowerCase();tasks=tasks.filter(t=>t.title.toLowerCase().includes(q)||(t.description||'').toLowerCase().includes(q))}
+  const total=team.tasks.length,done=team.tasks.filter(t=>t.status==='done').length,overdue=team.tasks.filter(t=>t.status!=='done'&&t.deadline&&days(t.deadline)<0).length;
+  const inprog=team.tasks.filter(t=>t.status==='inprogress').length;
+  const filterMember=UI.memberFilter?DB.users[UI.memberFilter]:null;
+  const inviteCount=myPendingInviteCount();
+  return `
+    ${inviteCount?`<div class="inv-banner" onclick="setPage('invites')"><i class="ti ti-mail" style="color:var(--amb);font-size:16px"></i><div style="flex:1;font-size:13px"><strong style="color:var(--amb)">${inviteCount} pending team invite${inviteCount>1?'s':''}</strong> — click to view & respond</div><i class="ti ti-chevron-right" style="color:var(--amb)"></i></div>`:''}
+    <div class="page-hdr">
+      <div class="page-title">${filterMember?filterMember.display+"'s tasks":team.name}</div>
+      ${UI.memberFilter?`<button class="btn btn-g btn-sm" onclick="clearMFilter()"><i class="ti ti-x"></i> Clear</button>`:''}
+      ${canCreateTask(team)?`<button class="btn btn-p btn-sm" onclick="openModal('addTask')"><i class="ti ti-plus"></i> New task</button>`:''}
+    </div>
+    <div class="stats-grid">
+      <div class="stat"><div class="stat-lbl">Total</div><div class="stat-val" style="color:var(--acc)">${total}</div></div>
+      <div class="stat"><div class="stat-lbl">In progress</div><div class="stat-val" style="color:var(--blu)">${inprog}</div></div>
+      <div class="stat"><div class="stat-lbl">Completed</div><div class="stat-val" style="color:var(--grn)">${total?Math.round(done/total*100):0}%</div></div>
+      <div class="stat"><div class="stat-lbl">Overdue</div><div class="stat-val" style="color:${overdue?'var(--red)':'var(--grn)'}">${overdue}</div></div>
+    </div>
+    <div class="toolbar">
+      <div class="search-box"><i class="ti ti-search" aria-hidden="true"></i><input placeholder="Search tasks…" value="${UI.searchQ}" oninput="doSearch(this.value)"/></div>
+      <select class="flt" onchange="setFilter(this.value)">${['all','todo','inprogress','review','done','blocked'].map(f=>`<option value="${f}"${UI.filter===f?' selected':''}>${f==='all'?'All':STATUS_MAP[f]||f}</option>`).join('')}</select>
+    </div>
+    ${tasks.length===0?`<div id="TASK_LIST"><div class="empty"><i class="ti ti-clipboard-x"></i>${UI.searchQ?'No matches':'No tasks yet'}</div></div>`:`<div id="TASK_LIST">${tasks.map(t=>renderTaskCard(t,team)).join('')}</div>`}`;
+}
+
+function renderTaskCard(task,team){
+  const assignees=(team.members||[]).map(mid=>DB.users[mid]).filter(m=>m&&(task.assignees||[]).includes(m.id));
+  const labels=(task.labels||[]).map(lid=>LABELS.find(l=>l.id===lid)).filter(Boolean);
+  const cc=(task.comments||[]).length;
+  const isOwner=team.ownerId===SESSION.userId;
+  const pendingApproval=task.status==='done'&&task.approved===false;
+  return `<div class="task-card${task.status==='done'?' done-c':''}" onclick="openModal('viewTask','${task.id}')">
+    <div class="tc-hdr">
+      <div class="prio-dot" style="background:${pColor(task.priority)}"></div>
+      <div class="tc-title${task.status==='done'?' sk':''}">${task.title}</div>
+      <div onclick="event.stopPropagation()" style="display:flex;gap:4px">
+        ${pendingApproval&&isOwner?`
+          <button class="btn btn-sm" style="background:var(--grng);color:var(--grn);border:1px solid var(--grn)" onclick="approveTask('${task.id}')" title="Approve"><i class="ti ti-check" style="font-size:11px"></i></button>
+          <button class="btn btn-sm" style="background:var(--redg);color:var(--red);border:1px solid var(--red)" onclick="rejectTask('${task.id}')" title="Send back"><i class="ti ti-x" style="font-size:11px"></i></button>
+        `:`
+        ${canEditTask(team,task)?`<button class="btn btn-g btn-sm" onclick="quickStatus('${task.id}')" title="Cycle status"><i class="ti ti-refresh" style="font-size:11px"></i></button>`:''}
+        ${canEditTask(team,task)?`<button class="btn btn-g btn-sm" onclick="openModal('editTask','${task.id}')"><i class="ti ti-edit" style="font-size:11px"></i></button>`:''}
+        `}
+      </div>
+    </div>
+    ${pendingApproval?`<div style="display:flex;align-items:center;gap:5px;margin-bottom:6px;font-size:11px;font-weight:600;color:var(--amb)"><i class="ti ti-clock" style="font-size:12px"></i> Pending approval</div>`:''}
+    ${labels.length?`<div style="display:flex;gap:3px;flex-wrap:wrap;margin-bottom:6px">${labels.map(l=>`<span class="lbl" style="background:${l.color}20;color:${l.color}">${l.name}</span>`).join('')}</div>`:''}
+    ${task.description?`<p style="font-size:12px;color:var(--text2);margin-bottom:7px;line-height:1.5">${task.description.slice(0,90)}${task.description.length>90?'…':''}</p>`:''}
+    <div class="tc-meta">
+      <span class="badge b-${task.status}">${STATUS_MAP[task.status]||task.status}</span>
+      ${task.deadline?`<span class="dl ${dlCls(task.deadline)}"><i class="ti ti-calendar" style="font-size:10px"></i>${dlLbl(task.deadline)}</span>`:''}
+      ${task.skills?`<span class="badge" style="background:var(--accg);color:var(--acc)">${task.skills}</span>`:''}
+      ${cc?`<span class="cc"><i class="ti ti-message-2" style="font-size:11px"></i>${cc}</span>`:''}
+      <div class="av-stack">${assignees.map(m=>`<div class="av av-xs" title="${m.display}" style="background:${ac(m.display)}22;color:${ac(m.display)}">${ini(m.display)}</div>`).join('')}</div>
+    </div>
+    ${task.progress?`<div class="prog-bar"><div class="prog-fill" style="width:${task.progress}%"></div></div>`:''}
+  </div>`;
+}
+
+function renderKanban(){
+  const team=getTeam();if(!team)return`<div class="empty"><i class="ti ti-layout-columns"></i>Select a team</div>`;
+  const cols=[{id:'todo',label:'To Do',c:'var(--text2)'},{id:'inprogress',label:'In Progress',c:'var(--blu)'},{id:'review',label:'Review',c:'var(--amb)'},{id:'done',label:'Done',c:'var(--grn)'},{id:'blocked',label:'Blocked',c:'var(--red)'}];
+  if(!UI.kanbanCol)UI.kanbanCol='todo';
+  return `<div class="page-hdr"><div class="page-title">Kanban</div>${canCreateTask(team)?`<button class="btn btn-p btn-sm" onclick="openModal('addTask')"><i class="ti ti-plus"></i> New task</button>`:''}</div>
+    <!-- mobile column tabs -->
+    <div class="kb-mob-tabs">
+      ${cols.map(col=>{
+        const cnt=(team.tasks||[]).filter(t=>t.status===col.id).length;
+        return `<button class="kb-mob-tab${UI.kanbanCol===col.id?' on':''}" onclick="setKanbanCol('${col.id}')" style="${UI.kanbanCol===col.id?`border-color:${col.c};color:${col.c}`:''}">${col.label} <span class="kb-cnt" style="margin-left:3px">${cnt}</span></button>`;
+      }).join('')}
+    </div>
+    <div class="kanban">${cols.map(col=>{
+      const tasks=(team.tasks||[]).filter(t=>t.status===col.id);
+      return `<div class="kb-col${UI.kanbanCol===col.id?' kb-col-active':''}"><div class="kb-hdr"><span style="color:${col.c}">${col.label}</span><span class="kb-cnt">${tasks.length}</span></div>
+        ${tasks.length===0?`<div style="font-size:11px;color:var(--text3);text-align:center;padding:16px 0">Empty</div>`:''}
+        ${tasks.map(t=>{
+          const lbls=(t.labels||[]).map(lid=>LABELS.find(l=>l.id===lid)).filter(Boolean);
+          const assignees=(team.members||[]).map(mid=>DB.users[mid]).filter(m=>m&&(t.assignees||[]).includes(m.id));
+          return `<div class="kb-task" onclick="openModal('viewTask','${t.id}')">
+            ${t.status==='done'&&t.approved===false?`<div style="font-size:9px;font-weight:600;color:var(--amb);margin-bottom:4px"><i class="ti ti-clock" style="font-size:10px"></i> Pending approval</div>`:''}
+            ${lbls.length?`<div style="display:flex;gap:3px;flex-wrap:wrap;margin-bottom:5px">${lbls.map(l=>`<span style="padding:1px 5px;border-radius:20px;font-size:9px;font-weight:600;background:${l.color}20;color:${l.color}">${l.name}</span>`).join('')}</div>`:''}
+            <div style="font-size:13px;font-weight:500;line-height:1.4;margin-bottom:5px">${t.title}</div>
+            <div style="display:flex;align-items:center;gap:5px">
+              <div class="prio-dot" style="background:${pColor(t.priority)};width:6px;height:6px"></div>
+              ${t.deadline?`<span class="dl ${dlCls(t.deadline)}" style="font-size:10px"><i class="ti ti-calendar" style="font-size:10px"></i>${dlLbl(t.deadline)}</span>`:''}
+              <div class="av-stack" style="margin-left:auto">${assignees.map(m=>`<div class="av" style="width:18px;height:18px;font-size:8px;border:2px solid var(--bg3);background:${ac(m.display)}22;color:${ac(m.display)}">${ini(m.display)}</div>`).join('')}</div>
+            </div>
+          </div>`;}).join('')}
+      </div>`;}).join('')}
+    </div>`;
+}
+
+function setKanbanCol(colId){UI.kanbanCol=colId;renderApp()}
+
+function renderMembers(){
+  const team=getTeam();if(!team)return`<div class="empty"><i class="ti ti-users"></i>Select a team</div>`;
+  const pendingInvites=DB.invites.filter(i=>i.teamId===team.id&&i.status==='pending');
+  const isOwner=team.ownerId===SESSION.userId;
+  const myRole=getMyRole(team);
+  return `<div class="page-hdr"><div class="page-title">Members</div>
+    ${canInvite(team)?`<button class="btn btn-p btn-sm" onclick="openModal('inviteMember')"><i class="ti ti-user-plus"></i> Invite</button>`:''}
+  </div>
+  ${pendingInvites.length?`<div style="background:var(--ambg);border:1px solid var(--amb);border-radius:var(--rl);padding:11px 14px;margin-bottom:14px">
+    <div style="font-size:12px;font-weight:600;color:var(--amb);margin-bottom:6px"><i class="ti ti-clock" style="font-size:12px"></i> Pending invites (${pendingInvites.length})</div>
+    ${pendingInvites.map(inv=>{const u=DB.users[inv.toUserId];return u?`<div style="display:flex;align-items:center;gap:7px;padding:4px 0"><div class="av av-xs" style="background:${ac(u.display)}22;color:${ac(u.display)}">${ini(u.display)}</div><span style="font-size:12px">@${u.username}</span><span style="font-size:11px;color:var(--text2)">• ${inv.role||'member'} • invited ${fmt(inv.ts)}</span></div>`:'';}).join('')}
+  </div>`:''}
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px">
+    ${(team.members||[]).map(mid=>{
+      const m=DB.users[mid];if(!m)return'';
+      const tasks=(team.tasks||[]).filter(t=>(t.assignees||[]).includes(mid));
+      const done=tasks.filter(t=>t.status==='done').length;
+      const isMe=mid===SESSION.userId;
+      const memberRole=mid===team.ownerId?'owner':(team.roles||{})[mid]||'member';
+      const roleInfo=ROLES[memberRole];
+      return `<div class="mc-lg">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+          <div class="av av-md" style="background:${ac(m.display)}22;color:${ac(m.display)}">${ini(m.display)}</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-weight:600;font-size:14px">${m.display}${isMe?' <span style="font-size:10px;color:var(--acc)">you</span>':''}</div>
+            <div style="font-size:11px;color:var(--text2)">@${m.username}${m.role?' · '+m.role:''}</div>
+            <div style="margin-top:3px"><span style="font-size:11px;font-weight:600;color:${roleInfo.color}">${roleInfo.icon} ${roleInfo.label}</span></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:4px">
+            ${isOwner&&!isMe?`<button class="btn btn-d btn-sm" onclick="kickMember('${mid}')"><i class="ti ti-x"></i></button>`:''}
+            ${isOwner&&!isMe?`<button class="btn btn-g btn-sm" style="padding:3px 6px;font-size:10px" onclick="openModal('changeRole','${mid}')"><i class="ti ti-shield"></i></button>`:''}
+          </div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:3px;margin-bottom:10px">${(m.skills||[]).map(s=>`<span class="sp">${s}</span>`).join('')||`<span style="font-size:11px;color:var(--text3)">No skills listed</span>`}</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;text-align:center">
+          <div style="background:var(--bg3);border-radius:var(--r);padding:7px;cursor:pointer" onclick="openModal('memberTasks','${mid}:all')"><div style="font-size:15px;font-weight:700;color:var(--acc)">${tasks.length}</div><div style="font-size:10px;color:var(--text3)">tasks</div></div>
+          <div style="background:var(--bg3);border-radius:var(--r);padding:7px;cursor:pointer" onclick="openModal('memberTasks','${mid}:active')"><div style="font-size:15px;font-weight:700;color:var(--blu)">${tasks.filter(t=>t.status==='inprogress').length}</div><div style="font-size:10px;color:var(--text3)">active</div></div>
+          <div style="background:var(--bg3);border-radius:var(--r);padding:7px;cursor:pointer" onclick="openModal('memberTasks','${mid}:done')"><div style="font-size:15px;font-weight:700;color:var(--grn)">${done}</div><div style="font-size:10px;color:var(--text3)">done</div></div>
+        </div>
+      </div>`;}).join('')}
+  </div>`;
+}
+
+// ── Performance Dashboard (owner/admin) ─────────────────────────
+function healthColor(h){
+  if(h>=80)return'var(--grn)';
+  if(h>=60)return'var(--blu)';
+  if(h>=40)return'var(--amb)';
+  return'var(--red)';
+}
+function trendIcon(t){
+  if(t==='improving')return'<span style="color:var(--grn)">📈</span>';
+  if(t==='declining')return'<span style="color:var(--red)">📉</span>';
+  return'<span style="color:var(--text3)">➡️</span>';
+}
+
+function renderPerformance(){
+  const team=getTeam();if(!team)return`<div class="empty"><i class="ti ti-chart-dots"></i>Select a team</div>`;
+  const myRole=getMyRole(team);
+  if(myRole!=='owner'&&myRole!=='admin'){
+    return `<div class="empty"><i class="ti ti-lock"></i>Only Owner and Admins can view team performance</div>`;
+  }
+
+  let members=(team.members||[]).map(mid=>{
+    const m=DB.users[mid];if(!m)return null;
+    return{...m,perf:analyzeMember(mid,team)};
+  }).filter(Boolean);
+
+  // search
+  if(UI.perfSearch){
+    const q=UI.perfSearch.toLowerCase();
+    members=members.filter(m=>m.display.toLowerCase().includes(q)||m.username.toLowerCase().includes(q));
+  }
+
+  // sort
+  const sortFns={
+    health:(a,b)=>b.perf.health-a.perf.health,
+    completion:(a,b)=>b.perf.completionRate-a.perf.completionRate,
+    tasks:(a,b)=>b.perf.total-a.perf.total,
+    overdue:(a,b)=>b.perf.overdue-a.perf.overdue,
+    name:(a,b)=>a.display.localeCompare(b.display),
+  };
+  members.sort(sortFns[UI.perfSort]||sortFns.health);
+
+  // خلاصه کل تیم
+  const allPerf=(team.members||[]).map(mid=>analyzeMember(mid,team));
+  const avgHealth=allPerf.length?Math.round(allPerf.reduce((a,p)=>a+p.health,0)/allPerf.length):0;
+  const totalOverdue=allPerf.reduce((a,p)=>a+p.overdue,0);
+  const atRisk=allPerf.filter(p=>p.health<40).length;
+  const topPerformers=allPerf.filter(p=>p.health>=80).length;
+
+  return `<div class="page-hdr"><div class="page-title"><i class="ti ti-chart-dots" style="margin-right:5px"></i>Team Performance</div></div>
+
+  <div class="stats-grid">
+    <div class="stat"><div class="stat-lbl">Team performance</div><div class="stat-val" style="color:${healthColor(avgHealth)}">${avgHealth}</div></div>
+    <div class="stat"><div class="stat-lbl">Top performers</div><div class="stat-val" style="color:var(--grn)">${topPerformers}</div></div>
+    <div class="stat"><div class="stat-lbl">At risk</div><div class="stat-val" style="color:${atRisk?'var(--red)':'var(--grn)'}">${atRisk}</div></div>
+    <div class="stat"><div class="stat-lbl">Total overdue</div><div class="stat-val" style="color:${totalOverdue?'var(--red)':'var(--grn)'}">${totalOverdue}</div></div>
+  </div>
+
+  <div class="toolbar">
+    <div class="search-box"><i class="ti ti-search"></i><input placeholder="Search members…" value="${UI.perfSearch}" oninput="doPerfSearch(this.value)"/></div>
+    <select class="flt" onchange="setPerfSort(this.value)">
+      <option value="health"${UI.perfSort==='health'?' selected':''}>Sort: Performance</option>
+      <option value="completion"${UI.perfSort==='completion'?' selected':''}>Sort: Completion %</option>
+      <option value="tasks"${UI.perfSort==='tasks'?' selected':''}>Sort: Task count</option>
+      <option value="overdue"${UI.perfSort==='overdue'?' selected':''}>Sort: Overdue</option>
+      <option value="name"${UI.perfSort==='name'?' selected':''}>Sort: Name</option>
+    </select>
+  </div>
+
+  <div style="font-size:11px;color:var(--text3);margin-bottom:10px">${members.length} member${members.length!==1?'s':''}</div>
+
+  <div id="PERF_LIST" style="display:flex;flex-direction:column;gap:9px">
+    ${members.length===0?`<div class="empty"><i class="ti ti-user-search"></i>No members found</div>`:members.map(m=>renderPerfCard(m,team)).join('')}
+  </div>`;
+}
+
+function renderPerfCard(m,team){
+  const p=m.perf;
+  return `<div style="background:var(--bg2);border:1px solid var(--border);border-left:3px solid ${healthColor(p.health)};border-radius:var(--rl);padding:13px" >
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+      <div class="av av-md" style="background:${ac(m.display)}22;color:${ac(m.display)}">${ini(m.display)}</div>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;align-items:center;gap:6px"><span style="font-weight:600;font-size:14px">${m.display}</span> ${trendIcon(p.trend)}</div>
+        <div style="font-size:12px;color:${p.summaryColor};font-weight:500">${p.summary}</div>
+      </div>
+      <div style="text-align:center;flex-shrink:0">
+        <div style="font-size:22px;font-weight:800;color:${healthColor(p.health)};line-height:1">${p.health}</div>
+        <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em">performance</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;text-align:center">
+      <div style="background:var(--bg3);border-radius:var(--r);padding:6px"><div style="font-size:14px;font-weight:700;color:var(--acc)">${p.total}</div><div style="font-size:9px;color:var(--text3)">tasks</div></div>
+      <div style="background:var(--bg3);border-radius:var(--r);padding:6px"><div style="font-size:14px;font-weight:700;color:var(--grn)">${p.completionRate}%</div><div style="font-size:9px;color:var(--text3)">done</div></div>
+      <div style="background:var(--bg3);border-radius:var(--r);padding:6px"><div style="font-size:14px;font-weight:700;color:${p.onTimeRate===null?'var(--text3)':p.onTimeRate>=70?'var(--grn)':'var(--amb)'}">${p.onTimeRate===null?'—':p.onTimeRate+'%'}</div><div style="font-size:9px;color:var(--text3)">on-time</div></div>
+      <div style="background:var(--bg3);border-radius:var(--r);padding:6px"><div style="font-size:14px;font-weight:700;color:var(--blu)">${p.avgDays===null?'—':p.avgDays+'d'}</div><div style="font-size:9px;color:var(--text3)">avg time</div></div>
+      <div style="background:var(--bg3);border-radius:var(--r);padding:6px"><div style="font-size:14px;font-weight:700;color:${p.overdue?'var(--red)':'var(--text2)'}">${p.overdue}</div><div style="font-size:9px;color:var(--text3)">overdue</div></div>
+    </div>
+  </div>`;
+}
+
+function doPerfSearch(q){
+  UI.perfSearch=q;
+  const team=getTeam();if(!team)return;
+  let members=(team.members||[]).map(mid=>{const m=DB.users[mid];if(!m)return null;return{...m,perf:analyzeMember(mid,team)};}).filter(Boolean);
+  if(q){const lq=q.toLowerCase();members=members.filter(m=>m.display.toLowerCase().includes(lq)||m.username.toLowerCase().includes(lq));}
+  const sortFns={health:(a,b)=>b.perf.health-a.perf.health,completion:(a,b)=>b.perf.completionRate-a.perf.completionRate,tasks:(a,b)=>b.perf.total-a.perf.total,overdue:(a,b)=>b.perf.overdue-a.perf.overdue,name:(a,b)=>a.display.localeCompare(b.display)};
+  members.sort(sortFns[UI.perfSort]||sortFns.health);
+  const list=document.getElementById('PERF_LIST');
+  if(list)list.innerHTML=members.length===0?`<div class="empty"><i class="ti ti-user-search"></i>No members found</div>`:members.map(m=>renderPerfCard(m,team)).join('');
+}
+function setPerfSort(s){UI.perfSort=s;renderApp();}
+
+// ── Team Chat ────────────────────────────────────────────────────
+let _chatPollTimer=null;
+
+function fmtChatTime(ts){
+  const d=new Date(ts);
+  return d.toLocaleTimeString('en',{hour:'2-digit',minute:'2-digit'});
+}
+function chatDayLabel(ts){
+  const d=new Date(ts),today=new Date();
+  const isSameDay=d.toDateString()===today.toDateString();
+  const yest=new Date(today);yest.setDate(yest.getDate()-1);
+  if(isSameDay)return'Today';
+  if(d.toDateString()===yest.toDateString())return'Yesterday';
+  return d.toLocaleDateString('en',{month:'short',day:'numeric'});
+}
+
+function renderChat(){
+  const team=getTeam();if(!team)return`<div class="empty"><i class="ti ti-message-circle"></i>Select a team</div>`;
+  const chat=DB.chats[team.id]||{messages:[]};
+  const msgs=chat.messages||[];
+
+  let lastDay=null;
+  const msgsHtml=msgs.map(m=>{
+    const isOwn=m.authorId===SESSION.userId;
+    const author=DB.users[m.authorId];
+    const dayLbl=chatDayLabel(m.ts);
+    let daySep='';
+    if(dayLbl!==lastDay){daySep=`<div class="chat-day-sep">${dayLbl}</div>`;lastDay=dayLbl;}
+    return `${daySep}<div class="chat-row${isOwn?' own':''}">
+      ${!isOwn?`<div class="av av-sm" style="background:${ac(m.author)}22;color:${ac(m.author)};flex-shrink:0">${ini(m.author)}</div>`:''}
+      <div>
+        <div class="chat-meta"><span class="chat-name">${isOwn?'You':m.author}</span><span class="chat-time">${fmtChatTime(m.ts)}</span></div>
+        <div class="chat-bubble">${highlightMentions(m.text,team)}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  const memberCount=(team.members||[]).length;
+  return `<div class="page-hdr">
+    <div style="display:flex;align-items:center;gap:10px;flex:1">
+      <div style="width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,${team.color}33,${team.color}11);border:1px solid ${team.color}44;display:flex;align-items:center;justify-content:center">
+        <i class="ti ti-message-circle" style="color:${team.color};font-size:18px"></i>
+      </div>
+      <div>
+        <div class="page-title" style="font-size:16px;line-height:1.2">${team.name}</div>
+        <div style="font-size:11px;color:var(--text3)"><span class="online-dot" style="display:inline-block;width:6px;height:6px;vertical-align:middle;margin-right:4px"></span>${memberCount} member${memberCount!==1?'s':''}</div>
+      </div>
+    </div>
+  </div>
+  <div class="chat-wrap">
+    <div class="chat-msgs" id="CHAT_MSGS">
+      ${msgs.length===0?`<div class="chat-empty">
+        <div class="chat-empty-icon"><i class="ti ti-messages" style="font-size:32px;color:var(--acc)"></i></div>
+        <div style="font-size:14px;font-weight:600;color:var(--text2)">No messages yet</div>
+        <span style="font-size:12px">Be the first to say hi to your team! 👋</span>
+      </div>`:msgsHtml}
+    </div>
+    <div class="chat-input-bar">
+      <div class="c-input-wrap">
+        <input id="CHAT_TEXT" placeholder="Message ${team.name}… use @ to mention" onkeydown="onChatKeydown(event)" oninput="onChatInput()" value="" autocomplete="off"/>
+        <div id="CHAT_MENTION_DD" class="mention-dropdown" style="display:none"></div>
+      </div>
+      <button class="chat-send-btn" onclick="sendChatMessage()" title="Send"><i class="ti ti-send"></i></button>
+    </div>
+  </div>`;
+}
+
+function scrollChatToBottom(){
+  const el=document.getElementById('CHAT_MSGS');
+  if(el)el.scrollTop=el.scrollHeight;
+}
+
+async function sendChatMessage(){
+  const input=document.getElementById('CHAT_TEXT');
+  if(!input)return;
+  const text=input.value.trim();if(!text)return;
+  const team=getTeam();if(!team)return;
+  const author=me().display;
+
+  if(!DB.chats[team.id])DB.chats[team.id]={messages:[]};
+  const msg={id:uid(),authorId:SESSION.userId,author,text,ts:Date.now()};
+  DB.chats[team.id].messages.push(msg);
+  if(DB.chats[team.id].messages.length>300) DB.chats[team.id].messages=DB.chats[team.id].messages.slice(-300);
+
+  input.value='';
+  const dd=document.getElementById('CHAT_MENTION_DD');if(dd)dd.style.display='none';
+
+  // فقط لیست پیام‌ها رو دوباره رندر کن، نه کل صفحه — تا اسکرول و فوکوس حفظ بشه
+  const msgsEl=document.getElementById('CHAT_MSGS');
+  if(msgsEl){
+    let lastDay=null;
+    msgsEl.innerHTML=DB.chats[team.id].messages.map(m=>{
+      const isOwn=m.authorId===SESSION.userId;
+      const dayLbl=chatDayLabel(m.ts);
+      let daySep='';
+      if(dayLbl!==lastDay){daySep=`<div class="chat-day-sep">${dayLbl}</div>`;lastDay=dayLbl;}
+      return `${daySep}<div class="chat-row${isOwn?' own':''}">
+        ${!isOwn?`<div class="av av-sm" style="background:${ac(m.author)}22;color:${ac(m.author)};flex-shrink:0">${ini(m.author)}</div>`:''}
+        <div>
+          <div class="chat-meta"><span class="chat-name">${isOwn?'You':m.author}</span><span class="chat-time">${fmtChatTime(m.ts)}</span></div>
+          <div class="chat-bubble">${highlightMentions(m.text,team)}</div>
+        </div>
+      </div>`;
+    }).join('');
+    scrollChatToBottom();
+  }
+
+  // منشن‌ها رو نوتیف کن
+  const mentioned=extractMentions(text,team);
+  mentioned.forEach(u=>{
+    if(u.id===SESSION.userId)return;
+    addNotif(u.id,`<strong>${author}</strong> mentioned you in team chat`);
+    if(u.telegramId){
+      tgSend(u.telegramId,`💬 <b>TeamFlow</b>\n${author} mentioned you in team chat!\n\nTeam: ${team.name}\n\n"${text}"`);
+    }
+  });
+  if(mentioned.length){
+    // notif روی DB.users[uid] هست، نه روی خود من — پس هرکدوم جدا save میشه
+    await Promise.all(mentioned.filter(u=>u.id!==SESSION.userId).map(u=>svUser(u.id)));
+  }
+
+  await svChat(team.id);
+}
+
+function onChatInput(){
+  const input=document.getElementById('CHAT_TEXT');
+  const dd=document.getElementById('CHAT_MENTION_DD');
+  if(!input||!dd)return;
+  const team=getTeam();if(!team)return;
+  const query=getMentionQuery(input);
+  if(query===null){dd.style.display='none';return;}
+  const matches=(team.members||[]).map(mid=>DB.users[mid]).filter(u=>u&&u.id!==SESSION.userId&&u.username.toLowerCase().startsWith(query.toLowerCase()));
+  if(matches.length===0){dd.style.display='none';return;}
+  _mentionActiveIdx=0;
+  dd.style.display='block';
+  dd.innerHTML=matches.map((u,i)=>`
+    <div class="mention-item${i===0?' hi':''}" data-idx="${i}" data-username="${u.username}" onclick="selectChatMention('${u.username}')">
+      <div class="av av-xs" style="background:${ac(u.display)}22;color:${ac(u.display)}">${ini(u.display)}</div>
+      <span>${u.display}</span><span style="color:var(--text3)">@${u.username}</span>
+    </div>`).join('');
+}
+
+function onChatKeydown(event){
+  const dd=document.getElementById('CHAT_MENTION_DD');
+  const isOpen=dd&&dd.style.display==='block';
+  if(isOpen){
+    const items=dd.querySelectorAll('.mention-item');
+    if(event.key==='ArrowDown'){event.preventDefault();_mentionActiveIdx=Math.min(_mentionActiveIdx+1,items.length-1);updateMentionHighlight(items);return;}
+    if(event.key==='ArrowUp'){event.preventDefault();_mentionActiveIdx=Math.max(_mentionActiveIdx-1,0);updateMentionHighlight(items);return;}
+    if(event.key==='Enter'||event.key==='Tab'){
+      event.preventDefault();
+      const active=items[_mentionActiveIdx];
+      if(active)selectChatMention(active.dataset.username);
+      return;
+    }
+    if(event.key==='Escape'){dd.style.display='none';return;}
+  }
+  if(event.key==='Enter'&&!isOpen){sendChatMessage();}
+}
+
+function selectChatMention(username){
+  const input=document.getElementById('CHAT_TEXT');
+  const dd=document.getElementById('CHAT_MENTION_DD');
+  if(!input)return;
+  const pos=input.selectionStart;
+  const text=input.value;
+  const before=text.slice(0,pos).replace(/@([a-zA-Z0-9_]*)$/,'@'+username+' ');
+  const after=text.slice(pos);
+  input.value=before+after;
+  const newPos=before.length;
+  input.focus();
+  input.setSelectionRange(newPos,newPos);
+  if(dd)dd.style.display='none';
+}
+
+// ── Chat Polling: هر 5 ثانیه فقط چت رو چک کن، بدون لود کل DB ──
+function startChatPolling(){
+  stopChatPolling();
+  _chatPollTimer=setInterval(async()=>{
+    if(UI.page!=='chat'||!UI.activeTeam)return;
+    const fresh=await loadChat(UI.activeTeam);
+    if(!fresh)return;
+    const old=DB.chats[UI.activeTeam]||{messages:[]};
+    if((fresh.messages||[]).length===(old.messages||[]).length)return; // چیز جدیدی نیومده
+    DB.chats[UI.activeTeam]=fresh;
+    const msgsEl=document.getElementById('CHAT_MSGS');
+    if(!msgsEl)return;
+    const wasAtBottom=msgsEl.scrollHeight-msgsEl.scrollTop-msgsEl.clientHeight<60;
+    const team=getTeam();if(!team)return;
+    let lastDay=null;
+    msgsEl.innerHTML=(fresh.messages||[]).map(m=>{
+      const isOwn=m.authorId===SESSION.userId;
+      const dayLbl=chatDayLabel(m.ts);
+      let daySep='';
+      if(dayLbl!==lastDay){daySep=`<div class="chat-day-sep">${dayLbl}</div>`;lastDay=dayLbl;}
+      return `${daySep}<div class="chat-row${isOwn?' own':''}">
+        ${!isOwn?`<div class="av av-sm" style="background:${ac(m.author)}22;color:${ac(m.author)};flex-shrink:0">${ini(m.author)}</div>`:''}
+        <div>
+          <div class="chat-meta"><span class="chat-name">${isOwn?'You':m.author}</span><span class="chat-time">${fmtChatTime(m.ts)}</span></div>
+          <div class="chat-bubble">${highlightMentions(m.text,team)}</div>
+        </div>
+      </div>`;
+    }).join('');
+    if(wasAtBottom)scrollChatToBottom();
+  },5000);
+}
+function stopChatPolling(){
+  if(_chatPollTimer){clearInterval(_chatPollTimer);_chatPollTimer=null;}
+}
+
+function renderActivity(){
+  const team=getTeam();if(!team)return`<div class="empty"><i class="ti ti-activity"></i>Select a team</div>`;
+  const acts=team.activity||[];
+  return `<div class="page-hdr"><div class="page-title">Activity</div><button class="btn btn-g btn-sm" onclick="clearAct()"><i class="ti ti-trash"></i> Clear</button></div>
+  ${acts.length===0?`<div class="empty"><i class="ti ti-activity"></i>No activity yet</div>`:`<div>${acts.map(a=>`<div class="act-item"><div class="act-icon" style="background:${a.iconBg||'var(--bg4)'}">${'<i class="ti '+(a.icon||'ti-point')+'" style="font-size:12px"></i>'}</div><div><div class="act-text">${a.text}</div><div class="act-time">${fmt(a.ts)}</div></div></div>`).join('')}</div>`}`;
+}
+
+function renderAnalytics(){
+  const team=getTeam();if(!team)return`<div class="empty"><i class="ti ti-chart-bar"></i>Select a team</div>`;
+  const tasks=team.tasks||[];
+  const statuses=['todo','inprogress','review','done','blocked'];
+  const sCounts=statuses.map(s=>tasks.filter(t=>t.status===s).length);
+  const maxS=Math.max(...sCounts,1);
+  const sColors=['var(--text2)','var(--blu)','var(--amb)','var(--grn)','var(--red)'];
+  const members=(team.members||[]).map(mid=>DB.users[mid]).filter(Boolean);
+  const mWork=members.map(m=>({name:m.display,count:tasks.filter(t=>(t.assignees||[]).includes(m.id)).length})).sort((a,b)=>b.count-a.count).slice(0,5);
+  const maxM=Math.max(...mWork.map(m=>m.count),1);
+  const total=tasks.length,done=tasks.filter(t=>t.status==='done').length;
+  const pH=tasks.filter(t=>t.priority==='high').length,pM=tasks.filter(t=>t.priority==='medium').length,pL=tasks.filter(t=>t.priority==='low').length;
+  const overdue=tasks.filter(t=>t.status!=='done'&&t.deadline&&days(t.deadline)<0).length;
+  return `<div class="page-hdr"><div class="page-title">Analytics</div></div>
+  <div class="stats-grid">
+    <div class="stat"><div class="stat-lbl">Total</div><div class="stat-val" style="color:var(--acc)">${total}</div></div>
+    <div class="stat"><div class="stat-lbl">Done</div><div class="stat-val" style="color:var(--grn)">${total?Math.round(done/total*100):0}%</div></div>
+    <div class="stat"><div class="stat-lbl">Members</div><div class="stat-val" style="color:var(--blu)">${members.length}</div></div>
+    <div class="stat"><div class="stat-lbl">Overdue</div><div class="stat-val" style="color:${overdue?'var(--red)':'var(--grn)'}">${overdue}</div></div>
+  </div>
+  <div class="an-grid">
+    <div class="cc-card"><div class="cc-title">Tasks by status</div><div class="bar-ch">${statuses.map((s,i)=>`<div class="bw"><div class="bv">${sCounts[i]}</div><div class="bar" style="height:${Math.round(sCounts[i]/maxS*70)+4}px;background:${sColors[i]};opacity:.85"></div><div class="bl">${STATUS_MAP[s]?.split(' ')[0]}</div></div>`).join('')}</div></div>
+    <div class="cc-card"><div class="cc-title">Priority split</div><div class="donut-wrap"><svg width="80" height="80" viewBox="0 0 80 80">${donut([pH,pM,pL],['var(--red)','var(--amb)','var(--grn)'])}</svg><div class="legend"><div class="li"><div class="ld" style="background:var(--red)"></div>High (${pH})</div><div class="li"><div class="ld" style="background:var(--amb)"></div>Med (${pM})</div><div class="li"><div class="ld" style="background:var(--grn)"></div>Low (${pL})</div></div></div></div>
+    <div class="cc-card"><div class="cc-title">Workload per member</div>${mWork.length===0?`<div style="font-size:12px;color:var(--text3)">No data</div>`:`<div style="display:flex;flex-direction:column;gap:7px">${mWork.map(m=>`<div><div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px"><span>${m.name.split(' ')[0]}</span><span style="color:var(--text2)">${m.count}</span></div><div class="prog-bar"><div class="prog-fill" style="width:${Math.round(m.count/maxM*100)}%"></div></div></div>`).join('')}</div>`}</div>
+    <div class="cc-card"><div class="cc-title">Deadline timeline</div>${tasks.filter(t=>t.status!=='done'&&t.deadline).sort((a,b)=>new Date(a.deadline)-new Date(b.deadline)).slice(0,6).map(t=>`<div class="tl-row"><span class="dl ${dlCls(t.deadline)}" style="width:60px;font-size:10px">${dlLbl(t.deadline)}</span><span style="font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.title}</span></div>`).join('')||`<div style="font-size:12px;color:var(--text3)">None</div>`}</div>
+  </div>`;
+}
+
+function donut(vals,colors){
+  const total=vals.reduce((a,b)=>a+b,0);if(!total)return`<circle cx="40" cy="40" r="30" fill="none" stroke="var(--bg4)" stroke-width="12"/>`;
+  let angle=-Math.PI/2,svg='';
+  vals.forEach((v,i)=>{const s=(v/total)*2*Math.PI;const x1=40+30*Math.cos(angle),y1=40+30*Math.sin(angle);const x2=40+30*Math.cos(angle+s),y2=40+30*Math.sin(angle+s);const lg=s>Math.PI?1:0;if(v>0)svg+=`<path d="M40,40 L${x1.toFixed(1)},${y1.toFixed(1)} A30,30 0 ${lg},1 ${x2.toFixed(1)},${y2.toFixed(1)} Z" fill="${colors[i]}" opacity=".85"/>`;angle+=s;});
+  svg+=`<circle cx="40" cy="40" r="18" fill="var(--bg2)"/>`;
+  const top=vals[0];svg+=`<text x="40" y="44" text-anchor="middle" font-size="11" font-weight="700" fill="var(--text)">${total?Math.round(top/total*100):0}%</text>`;
+  return svg;
+}
+
+function renderInvites(){
+  const invites=myInvites();
+  if(me()?.notifs)me().notifs.forEach(n=>n.read=true);
+  svUser();
+  return `<div class="page-hdr"><div class="page-title">Team Invites</div></div>
+  ${invites.length===0?`<div class="empty"><i class="ti ti-mail-opened"></i>No pending invites</div>`:`
+  <p style="font-size:13px;color:var(--text2);margin-bottom:14px">You've been invited to join these teams. Accept to join or decline to remove the invite.</p>
+  ${invites.map(inv=>{
+    const team=DB.teams[inv.teamId];
+    const from=DB.users[inv.fromUserId];
+    if(!team||!from)return'';
+    return `<div class="invite-card pen">
+      <div style="width:36px;height:36px;border-radius:50%;background:${team.color}22;border:2px solid ${team.color};display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">
+        <i class="ti ti-users" style="color:${team.color}"></i>
+      </div>
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:600;font-size:14px">${team.name}</div>
+        <div style="font-size:12px;color:var(--text2);margin-top:2px">Invited by <strong>@${from.username}</strong> · ${fmt(inv.ts)}</div>
+        ${team.desc?`<div style="font-size:11px;color:var(--text3);margin-top:2px">${team.desc}</div>`:''}
+        <div style="font-size:11px;color:var(--text2);margin-top:4px">${(team.members||[]).length} member${(team.members||[]).length!==1?'s':''} · ${(team.tasks||[]).length} task${(team.tasks||[]).length!==1?'s':''}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:5px">
+        <button class="btn btn-p btn-sm" onclick="respondInvite('${inv.id}',true)"><i class="ti ti-check"></i> Accept</button>
+        <button class="btn btn-d btn-sm" onclick="respondInvite('${inv.id}',false)"><i class="ti ti-x"></i> Decline</button>
+      </div>
+    </div>`;}).join('')}
+  `}`;
+}
+
+function renderNotifs(){
+  const u=me();const notifs=u?.notifs||[];
+  if(u?.notifs)u.notifs.forEach(n=>n.read=true);
+  svUser();
+  return `<div class="page-hdr"><div class="page-title">Notifications</div><button class="btn btn-g btn-sm" onclick="clearNotifs()"><i class="ti ti-trash"></i> Clear</button></div>
+  ${notifs.length===0?`<div class="empty"><i class="ti ti-bell-off"></i>No notifications</div>`:`<div>${notifs.map(n=>`<div class="notif-item"><div class="nd"></div><div style="flex:1"><div style="font-size:13px">${n.text}</div><div style="font-size:10px;color:var(--text3);margin-top:2px">${fmt(n.ts)}</div></div></div>`).join('')}</div>`}`;
+}
+
+function renderProfile(){
+  const u=me();if(!u)return'';
+  const allTasks=Object.values(DB.teams).filter(t=>t.members?.includes(u.id)).flatMap(t=>t.tasks||[]).filter(t=>(t.assignees||[]).includes(u.id));
+  const teams=myTeams();
+  return `<div class="page-hdr"><div class="page-title">My Profile</div><button class="btn btn-p btn-sm" onclick="openModal('editProfile')"><i class="ti ti-edit"></i> Edit</button></div>
+  <div style="display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:start">
+    <div class="av av-lg" style="background:${ac(u.display)}22;color:${ac(u.display)};width:72px;height:72px;font-size:28px">${ini(u.display)}</div>
+    <div>
+      <div style="font-size:20px;font-weight:700">${u.display}</div>
+      <div style="font-size:13px;color:var(--text2);margin-top:2px">@${u.username}${u.role?' · '+u.role:''}</div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:8px">${(u.skills||[]).map(s=>`<span class="sp">${s}</span>`).join('')||`<span style="font-size:12px;color:var(--text3)">No skills listed</span>`}</div>
+    </div>
+  </div>
+  <div class="stats-grid" style="margin-top:18px">
+    <div class="stat"><div class="stat-lbl">Teams</div><div class="stat-val" style="color:var(--acc)">${teams.length}</div></div>
+    <div class="stat"><div class="stat-lbl">My tasks</div><div class="stat-val" style="color:var(--blu)">${allTasks.length}</div></div>
+    <div class="stat"><div class="stat-lbl">Completed</div><div class="stat-val" style="color:var(--grn)">${allTasks.filter(t=>t.status==='done').length}</div></div>
+    <div class="stat"><div class="stat-lbl">In progress</div><div class="stat-val" style="color:var(--amb)">${allTasks.filter(t=>t.status==='inprogress').length}</div></div>
+  </div>
+  <div style="margin-top:4px">
+    <div style="font-size:13px;font-weight:600;margin-bottom:10px;color:var(--text2)">My teams</div>
+    ${teams.length===0?`<div style="font-size:13px;color:var(--text3)">Not in any teams yet</div>`:`
+    <div style="display:flex;flex-direction:column;gap:7px">${teams.map(t=>`<div style="display:flex;align-items:center;gap:10px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:10px;cursor:pointer" onclick="setTeam('${t.id}')">
+      <span style="width:10px;height:10px;border-radius:50%;background:${t.color};flex-shrink:0"></span>
+      <span style="font-weight:500">${t.name}</span>
+      <span style="font-size:12px;color:var(--text2);margin-left:auto">${(t.members||[]).length} members · ${(t.tasks||[]).length} tasks</span>
+      <i class="ti ti-chevron-right" style="font-size:13px;color:var(--text3)"></i>
+    </div>`).join('')}</div>`}
+  </div>`;
+}
+
+function openModal(type,id){
+  const team=getTeam();
+  let html='';
+  if(type==='createTeam'){
+    tmpColor=COLORS[0];
+    html=`<div class="modal"><div class="modal-title"><i class="ti ti-users"></i> Create team</div>
+      <div class="mfg"><label>Team name</label><input id="M_NAME" placeholder="e.g. Product Squad" autofocus/></div>
+      <div class="mfg"><label>Description</label><textarea id="M_DESC" placeholder="What is this team working on?" style="min-height:52px"></textarea></div>
+      <div class="mfg"><label>Color</label><div class="swatches">${COLORS.map((c,i)=>`<div class="sw${i===0?' on':''}" style="background:${c}" onclick="pickColor(this,'${c}')"></div>`).join('')}</div></div>
+      <div class="mfooter"><button class="btn btn-g btn-sm" onclick="closeModal()">Cancel</button><button class="btn btn-p btn-sm" onclick="createTeam()">Create</button></div>
+    </div>`;
+  } else if(type==='inviteMember'){
+    html=`<div class="modal"><div class="modal-title"><i class="ti ti-user-plus"></i> Invite member</div>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:14px;line-height:1.5">Enter the username of the person you want to invite.</p>
+      <div class="mfg"><label>Username</label><div class="input-prefix"><span>@</span><input id="M_INV_USER" placeholder="their_username" autofocus/></div></div>
+      <div class="mfg"><label>Role</label>
+        <select id="M_INV_ROLE">
+          <option value="admin">🛡️ Admin — can invite, kick, edit all tasks</option>
+          <option value="member" selected>✏️ Member — can create & edit own tasks</option>
+          <option value="viewer">👁️ Viewer — view only</option>
+        </select>
+      </div>
+      <div id="INV_MSG" style="font-size:12px;min-height:16px;margin-top:-8px;margin-bottom:8px"></div>
+      <div class="mfooter"><button class="btn btn-g btn-sm" onclick="closeModal()">Cancel</button><button class="btn btn-p btn-sm" onclick="sendInvite()">Send Invite</button></div>
+    </div>`;
+  } else if(type==='addTask'||type==='editTask'){
+    const task=id?team.tasks.find(t=>t.id===id):null;
+    tmpAssignees=task?[...(task.assignees||[])]:[];
+    tmpLabels=task?[...(task.labels||[])]:[];
+    const today=new Date().toISOString().split('T')[0];
+    html=`<div class="modal modal-w"><div class="modal-title"><i class="ti ti-clipboard-list"></i> ${task?'Edit task':'New task'}</div>
+      <div class="mfg"><label>Title</label><input id="M_TITLE" value="${task?task.title:''}" placeholder="What needs to be done?" autofocus/></div>
+      <div class="mfg"><label>Description</label><textarea id="M_DESC" placeholder="Details…">${task?task.description||'':''}</textarea></div>
+      <div class="form-row">
+        <div class="mfg"><label>Priority</label><select id="M_PRIO">${['high','medium','low'].map(p=>`<option value="${p}"${task?.priority===p?' selected':''}>${p[0].toUpperCase()+p.slice(1)}</option>`).join('')}</select></div>
+        <div class="mfg"><label>Status</label><select id="M_STAT">${Object.entries(STATUS_MAP).map(([v,l])=>`<option value="${v}"${task?.status===v?' selected':''}>${l}</option>`).join('')}</select></div>
+      </div>
+      <div class="form-row">
+        <div class="mfg"><label style="display:flex;align-items:center;justify-content:space-between">Deadline <span class="asst-back" style="margin:0;font-size:10px" onclick="suggestTaskDeadline()"><i class="ti ti-sparkles" style="font-size:11px"></i> Suggest</span></label><input type="date" id="M_DL" value="${task?.deadline||''}" min="${today}"/><div id="DL_HINT" style="font-size:11px;color:var(--text3);margin-top:4px"></div></div>
+        <div class="mfg"><label>Skill needed</label><select id="M_SKILL"><option value="">Any</option>${SKILLS.map(s=>`<option value="${s}"${task?.skills===s?' selected':''}>${s}</option>`).join('')}</select></div>
+      </div>
+      <div class="mfg"><label>Labels</label><div class="label-row">${LABELS.map(l=>`<div class="lp${tmpLabels.includes(l.id)?' on':''}" style="background:${l.color}20;color:${l.color}" onclick="toggleLabel(this,'${l.id}')">${l.name}</div>`).join('')}</div></div>
+      <div class="mfg">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+          <label style="margin:0">Assign to</label>
+          <button class="btn btn-g btn-sm" style="padding:3px 9px;font-size:11px" onclick="showAssigneeSuggestions()" type="button"><i class="ti ti-sparkles" style="font-size:12px"></i> Suggest</button>
+        </div>
+        <div id="SUGGEST_BOX" style="display:none;margin-bottom:8px"></div>
+        <div class="assignee-grid">${(team.members||[]).map(mid=>{const m=DB.users[mid];if(!m)return'';return`<div class="a-chip${tmpAssignees.includes(mid)?' on':''}" id="AC_${mid}" onclick="toggleAss('${mid}')"><div class="av av-xs" style="background:${ac(m.display)}22;color:${ac(m.display)}">${ini(m.display)}</div>${m.display.split(' ')[0]}</div>`}).join('')}</div>
+      </div>
+      <div class="mfg"><label>Progress: <span id="PV">${task?.progress||0}%</span></label><input type="range" id="M_PROG" min="0" max="100" step="5" value="${task?.progress||0}" oninput="document.getElementById('PV').textContent=this.value+'%'"/></div>
+      <div class="mfooter">
+        ${task?`<button class="btn btn-d btn-sm" onclick="deleteTask('${task.id}')"><i class="ti ti-trash"></i></button>`:''}
+        <button class="btn btn-g btn-sm" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-p btn-sm" onclick="${task?`saveTask('${task.id}')`:'addTask()'}">${task?'Save':'Add task'}</button>
+      </div>
+    </div>`;
+  } else if(type==='viewTask'){
+    if(!team)return;
+    const task=team.tasks.find(t=>t.id===id);if(!task)return;
+    const assignees=(team.members||[]).map(mid=>DB.users[mid]).filter(m=>m&&(task.assignees||[]).includes(m.id));
+    const labels=(task.labels||[]).map(lid=>LABELS.find(l=>l.id===lid)).filter(Boolean);
+    const comments=task.comments||[];
+    const isOwner=team.ownerId===SESSION.userId;
+    const pendingApproval=task.status==='done'&&task.approved===false;
+    html=`<div class="modal modal-w">
+      ${pendingApproval?`<div style="background:var(--ambg);border:1px solid var(--amb);border-radius:var(--rl);padding:11px 14px;margin-bottom:13px;display:flex;align-items:center;gap:10px">
+        <i class="ti ti-clock" style="color:var(--amb);font-size:18px"></i>
+        <div style="flex:1;font-size:12px;color:var(--amb)"><strong>Pending your approval.</strong> Points won't count until approved.</div>
+        ${isOwner?`<div style="display:flex;gap:6px">
+          <button class="btn btn-sm" style="background:var(--grn);color:#fff" onclick="approveTask('${task.id}')"><i class="ti ti-check"></i> Approve</button>
+          <button class="btn btn-sm" style="background:var(--red);color:#fff" onclick="rejectTask('${task.id}')"><i class="ti ti-x"></i> Reject</button>
+        </div>`:''}
+      </div>`:''}
+      <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:8px">
+        <div class="prio-dot" style="background:${pColor(task.priority)};margin-top:7px"></div>
+        <div style="flex:1">
+          <div style="font-size:16px;font-weight:700;line-height:1.4${task.status==='done'?';text-decoration:line-through;opacity:.6':''}">${task.title}</div>
+          <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:6px">
+            <span class="badge b-${task.status}">${STATUS_MAP[task.status]}</span>
+            ${labels.map(l=>`<span class="lbl" style="background:${l.color}20;color:${l.color}">${l.name}</span>`).join('')}
+            ${task.deadline?`<span class="dl ${dlCls(task.deadline)}"><i class="ti ti-calendar" style="font-size:10px"></i>${new Date(task.deadline+'T00:00:00').toLocaleDateString('en',{month:'short',day:'numeric',year:'numeric'})}</span>`:''}
+          </div>
+        </div>
+        <button class="btn btn-g btn-sm" onclick="openModal('editTask','${task.id}')"><i class="ti ti-edit"></i> Edit</button>
+      </div>
+      ${task.description?`<div style="background:var(--bg3);border-radius:var(--r);padding:11px;font-size:13px;line-height:1.6;color:var(--text2);margin-bottom:13px">${task.description}</div>`:''}
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:13px">
+        <div style="background:var(--bg3);border-radius:var(--r);padding:10px">
+          <div style="font-size:10px;color:var(--text3);margin-bottom:6px;font-weight:600;text-transform:uppercase">Assigned to</div>
+          ${assignees.length===0?`<span style="font-size:12px;color:var(--text3)">Unassigned</span>`:assignees.map(m=>`<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><div class="av av-xs" style="background:${ac(m.display)}22;color:${ac(m.display)}">${ini(m.display)}</div><span style="font-size:12px">${m.display}</span></div>`).join('')}
+        </div>
+        <div style="background:var(--bg3);border-radius:var(--r);padding:10px">
+          <div style="font-size:10px;color:var(--text3);margin-bottom:6px;font-weight:600;text-transform:uppercase">Details</div>
+          <div style="font-size:12px;color:var(--text2);display:flex;flex-direction:column;gap:3px">
+            <span>Priority: <b style="color:${pColor(task.priority)}">${task.priority}</b></span>
+            ${task.skills?`<span>Skill: <b>${task.skills}</b></span>`:''}
+            ${task.progress?`<span>Progress: <b>${task.progress}%</b></span>`:''}
+          </div>
+        </div>
+      </div>
+      ${task.progress?`<div class="prog-bar" style="margin-bottom:13px"><div class="prog-fill" style="width:${task.progress}%"></div></div>`:''}
+      <div style="border-top:1px solid var(--border);padding-top:12px">
+        <div style="font-size:13px;font-weight:600;margin-bottom:9px">Comments (${comments.length})</div>
+        ${comments.map(c=>`<div class="comment-item"><div class="c-hdr"><div class="av av-xs" style="background:${ac(c.author)}22;color:${ac(c.author)}">${ini(c.author)}</div><span class="c-name">${c.author}</span><span class="c-time">${fmt(c.ts)}</span></div><div class="c-text">${highlightMentions(c.text,team)}</div></div>`).join('')}
+        ${comments.length===0?`<div style="font-size:12px;color:var(--text3);margin-bottom:8px">No comments yet</div>`:''}
+        <div class="c-input-row">
+          <div class="c-input-wrap">
+            <input id="C_TEXT" placeholder="Write a comment… use @ to mention (Enter to send)" onkeydown="onCommentKeydown(event,'${task.id}')" oninput="onCommentInput('${task.id}')" value=""/>
+            <div id="MENTION_DD" class="mention-dropdown" style="display:none"></div>
+          </div>
+          <button class="btn btn-p btn-sm" onclick="addComment('${task.id}')"><i class="ti ti-send" style="font-size:12px"></i></button>
+        </div>
+      </div>
+      <div class="mfooter"><button class="btn btn-g btn-sm" onclick="closeModal()">Close</button></div>
+    </div>`;
+  } else if(type==='changeRole'){
+    const team=getTeam();if(!team||team.ownerId!==SESSION.userId)return;
+    const m=DB.users[id];if(!m)return;
+    const currentRole=(team.roles||{})[id]||'member';
+    html=`<div class="modal"><div class="modal-title"><i class="ti ti-shield"></i> Change Role</div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;background:var(--bg3);border-radius:var(--r);padding:10px">
+        <div class="av av-sm" style="background:${ac(m.display)}22;color:${ac(m.display)}">${ini(m.display)}</div>
+        <div><div style="font-weight:600">${m.display}</div><div style="font-size:12px;color:var(--text2)">@${m.username}</div></div>
+      </div>
+      <div class="mfg"><label>Role</label>
+        <select id="M_ROLE_SEL">
+          <option value="admin" ${currentRole==='admin'?'selected':''}>🛡️ Admin — can invite, kick, edit all tasks</option>
+          <option value="member" ${currentRole==='member'?'selected':''}>✏️ Member — can create & edit own tasks</option>
+          <option value="viewer" ${currentRole==='viewer'?'selected':''}>👁️ Viewer — view only</option>
+        </select>
+      </div>
+      <div class="mfooter"><button class="btn btn-g btn-sm" onclick="closeModal()">Cancel</button><button class="btn btn-p btn-sm" onclick="saveRole('${id}')">Save</button></div>
+    </div>`;
+  } else if(type==='memberTasks'){
+    if(!team)return;
+    const [mid,filter]=id.split(':');
+    const m=DB.users[mid];if(!m)return;
+    let tasks=(team.tasks||[]).filter(t=>(t.assignees||[]).includes(mid));
+    if(filter==='active')tasks=tasks.filter(t=>t.status==='inprogress');
+    if(filter==='done')tasks=tasks.filter(t=>t.status==='done');
+    const filterLabel=filter==='active'?'In Progress':filter==='done'?'Done':'All Tasks';
+    html=`<div class="modal modal-w">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+        <div class="av av-sm" style="background:${ac(m.display)}22;color:${ac(m.display)}">${ini(m.display)}</div>
+        <div style="flex:1"><div style="font-weight:600;font-size:14px">${m.display}'s tasks</div><div style="font-size:11px;color:var(--text2)">@${m.username}</div></div>
+      </div>
+      <div class="tabs-row" style="margin-bottom:12px">
+        <div class="tab${filter==='all'?' on':''}" onclick="openModal('memberTasks','${mid}:all')">All</div>
+        <div class="tab${filter==='active'?' on':''}" onclick="openModal('memberTasks','${mid}:active')">In Progress</div>
+        <div class="tab${filter==='done'?' on':''}" onclick="openModal('memberTasks','${mid}:done')">Done</div>
+      </div>
+      <div style="max-height:420px;overflow-y:auto">
+        ${tasks.length===0?`<div class="empty" style="padding:24px 0"><i class="ti ti-clipboard-x"></i>No tasks in "${filterLabel}"</div>`:tasks.map(t=>renderTaskCard(t,team)).join('')}
+      </div>
+      <div class="mfooter"><button class="btn btn-g btn-sm" onclick="closeModal()">Close</button></div>
+    </div>`;
+  } else if(type==='editProfile'){
+    const u=me();if(!u)return;
+    tmpSkills=[...u.skills||[]];
+    const verifBadge=u.email?(u.verified?`<span style="font-size:10px;color:var(--grn);font-weight:600">✓ Verified</span>`:`<span style="font-size:10px;color:var(--amb);font-weight:600">⚠ Not verified</span>`):'';
+    html=`<div class="modal"><div class="modal-title"><i class="ti ti-user-circle"></i> Edit profile</div>
+      <div class="mfg"><label>Display name</label><input id="M_DISPLAY" value="${u.display}"/></div>
+      <div class="mfg"><label>Email ${verifBadge}</label>
+        <input type="email" id="M_EMAIL" value="${u.email||''}" placeholder="you@example.com"/>
+        <div style="font-size:11px;color:var(--text3);margin-top:4px">${u.email?'Changing your email will require re-verification.':'Add an email to enable password reset.'}</div>
+      </div>
+      <div class="mfg"><label>Role / Title</label><input id="M_ROLE" value="${u.role||''}" placeholder="e.g. Frontend Dev"/></div>
+      <div class="mfg"><label>Telegram Chat ID <span style="font-size:10px;color:var(--text3);font-weight:400">(optional)</span></label>
+        <input id="M_TG" value="${u.telegramId||''}" placeholder="e.g. 1178362567"/>
+        <div style="font-size:11px;color:var(--text3);margin-top:4px">Get your Chat ID from <a href="https://t.me/userinfobot" target="_blank" style="color:var(--acc)">@userinfobot</a>, then start <a href="https://t.me/teamflow_notify_bot" target="_blank" style="color:var(--acc)">@teamflow_notify_bot</a></div>
+      </div>
+      <div class="mfg"><label>Skills</label><div class="chip-grid">${SKILLS.map(s=>`<div class="chip${tmpSkills.includes(s)?' on':''}" onclick="toggleSkill(this,'${s}')">${s}</div>`).join('')}</div></div>
+      <div id="PROFILE_MSG" style="font-size:12px;min-height:16px;margin-top:-6px;margin-bottom:8px"></div>
+      <div class="mfooter"><button class="btn btn-g btn-sm" onclick="closeModal()">Cancel</button><button class="btn btn-p btn-sm" onclick="saveProfile()">Save</button></div>
+    </div>`;
+  }
+  document.getElementById('MODAL_ROOT').innerHTML=`<div class="modal-wrap" onclick="if(event.target===this)closeModal()">${html}</div>`;
+}
+
+function closeModal(){document.getElementById('MODAL_ROOT').innerHTML=''}
+function pickColor(el,c){document.querySelectorAll('.sw').forEach(s=>s.classList.remove('on'));el.classList.add('on');tmpColor=c}
+function toggleSkill(el,s){const i=tmpSkills.indexOf(s);if(i===-1){tmpSkills.push(s);el.classList.add('on')}else{tmpSkills.splice(i,1);el.classList.remove('on')}}
+function toggleLabel(el,lid){const i=tmpLabels.indexOf(lid);if(i===-1){tmpLabels.push(lid);el.classList.add('on')}else{tmpLabels.splice(i,1);el.classList.remove('on')}}
+function toggleAss(mid){const el=document.getElementById('AC_'+mid);const i=tmpAssignees.indexOf(mid);if(i===-1){tmpAssignees.push(mid);el?.classList.add('on')}else{tmpAssignees.splice(i,1);el?.classList.remove('on')}}
+
+function showAssigneeSuggestions(){
+  const team=getTeam();if(!team)return;
+  const box=document.getElementById('SUGGEST_BOX');if(!box)return;
+  const skill=document.getElementById('M_SKILL')?.value||'';
+  const suggestions=suggestAssignees(skill,team).slice(0,3);
+  if(suggestions.length===0){box.style.display='block';box.innerHTML=`<div style="font-size:12px;color:var(--text3);padding:8px">No members to suggest.</div>`;return;}
+  const medals=['🥇','🥈','🥉'];
+  box.style.display='block';
+  box.innerHTML=`
+    <div style="background:var(--accg);border:1px solid var(--acc);border-radius:var(--r);padding:10px">
+      <div style="font-size:11px;font-weight:700;color:var(--acc);margin-bottom:8px;display:flex;align-items:center;gap:5px"><i class="ti ti-sparkles"></i> SMART SUGGESTIONS${skill?` for ${skill}`:''}</div>
+      ${suggestions.map((s,i)=>`
+        <div style="display:flex;align-items:center;gap:9px;padding:7px;border-radius:var(--r);cursor:pointer;background:${tmpAssignees.includes(s.member.id)?'var(--bg2)':'transparent'};margin-bottom:${i<suggestions.length-1?'4px':'0'}" onclick="pickSuggested('${s.member.id}')">
+          <span style="font-size:15px">${medals[i]}</span>
+          <div class="av av-xs" style="background:${ac(s.member.display)}22;color:${ac(s.member.display)}">${ini(s.member.display)}</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:12px;font-weight:600">${s.member.display}</div>
+            <div style="font-size:10px;color:var(--text2)">${s.reasons.slice(0,3).join(' · ')||'available'}</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:13px;font-weight:700;color:var(--acc)">${s.score}</div>
+            <div style="font-size:9px;color:var(--text3)">match</div>
+          </div>
+          ${tmpAssignees.includes(s.member.id)?`<i class="ti ti-check" style="color:var(--grn);font-size:14px"></i>`:`<i class="ti ti-plus" style="color:var(--text3);font-size:14px"></i>`}
+        </div>`).join('')}
+    </div>`;
+}
+
+function pickSuggested(mid){
+  toggleAss(mid);
+  showAssigneeSuggestions(); // رفرش برای نشون دادن تیک
+}
+
+function suggestTaskDeadline(){
+  const team=getTeam();if(!team)return;
+  const hint=document.getElementById('DL_HINT');
+  const skill=document.getElementById('M_SKILL')?.value||'';
+  const s=suggestDeadline(skill,team);
+  const d=new Date();d.setDate(d.getDate()+s.days);
+  const iso=d.toISOString().split('T')[0];
+  const dlInput=document.getElementById('M_DL');
+  if(dlInput)dlInput.value=iso;
+  if(hint){
+    hint.style.color='var(--acc)';
+    hint.innerHTML=`✨ Suggested <b>${s.days} days</b> from now${skill&&s.hasSkill?` — based on ${s.poolSize} ${skill} member${s.poolSize!==1?'s':''}`:''} (avg workload: ${s.avgLoad} tasks/person, team avg completion: ${s.avgCompletionDays}d)`;
+  }
+}
+
+// FIX: createTeam no longer calls loadDB() before acting
+// This prevented race conditions where loadDB() would reset pending state
+async function createTeam(){
+  const name=document.getElementById('M_NAME').value.trim();if(!name)return;
+  const desc=document.getElementById('M_DESC').value.trim();
+  const t={id:uid(),name,color:tmpColor,desc,ownerId:SESSION.userId,members:[SESSION.userId],removedMembers:[],roles:{},tasks:[],activity:[]};
+  DB.teams[t.id]=t;UI.activeTeam=t.id;UI.page='tasks';
+  addAct(t.id,'ti-star','var(--accg)',`Team <strong>${name}</strong> was created by <strong>${me().display}</strong>`);
+  await svTeam(t.id);closeModal();renderApp();
+}
+
+async function sendInvite(){
+  const username=document.getElementById('M_INV_USER').value.trim().toLowerCase();
+  const team=getTeam();if(!team)return;
+  const msg=document.getElementById('INV_MSG');
+  if(!canInvite(team)){msg.style.color='var(--red)';msg.textContent='Only Owner or Admin can invite members';return}
+  const target=Object.values(DB.users).find(u=>u.username===username);
+  if(!target){msg.style.color='var(--red)';msg.textContent='User @'+username+' not found';return}
+  if(target.id===SESSION.userId){msg.style.color='var(--red)';msg.textContent='You cannot invite yourself';return}
+  if(team.members.includes(target.id)){msg.style.color='var(--red)';msg.textContent='@'+username+' is already in this team';return}
+  if(DB.invites.find(i=>i.teamId===team.id&&i.toUserId===target.id&&i.status==='pending')){msg.style.color='var(--red)';msg.textContent='Already sent an invite to @'+username;return}
+  // انتخاب role برای invite
+  const selectedRole=document.getElementById('M_INV_ROLE')?.value||'member';
+  DB.invites.push({id:uid(),teamId:team.id,fromUserId:SESSION.userId,toUserId:target.id,status:'pending',role:selectedRole,ts:Date.now()});
+  addNotif(target.id,`@${me().username} invited you to join team <strong>${team.name}</strong>`);
+  addAct(team.id,'ti-mail','var(--accg)',`Invite sent to <strong>@${target.username}</strong> as ${selectedRole}`);
+  msg.style.color='var(--grn)';msg.textContent='Invite sent to @'+username+'!';
+  await Promise.all([svTeam(team.id), svMeta(), sv('user:'+target.id)]);
+  setTimeout(()=>{closeModal();renderApp()},800);
+}
+
+// FIX: respondInvite no longer calls loadDB() — works on current state
+async function respondInvite(invId,accept){
+  const inv=DB.invites.find(i=>i.id===invId);
+  if(!inv||inv.toUserId!==SESSION.userId)return;
+  inv.status=accept?'accepted':'declined';
+  if(accept){
+    const team=DB.teams[inv.teamId];
+    if(team){
+      if(!Array.isArray(team.members))team.members=[];
+      if(Array.isArray(team.removedMembers))team.removedMembers=team.removedMembers.filter(id=>id!==inv.toUserId);
+      const wasMember=team.members.includes(inv.toUserId);
+      [team.ownerId,inv.fromUserId,inv.toUserId].filter(Boolean).forEach(uid=>{
+        if(!team.members.includes(uid))team.members.push(uid);
+      });
+      // role رو از invite بگیر، default: member
+      if(!team.roles)team.roles={};
+      if(inv.toUserId!==team.ownerId) team.roles[inv.toUserId]=inv.role||'member';
+      if(!wasMember){
+        addAct(inv.teamId,'ti-user-check','var(--grng)',`<strong>${me().display}</strong> joined the team`);
+        addNotif(inv.fromUserId,`<strong>${me().display}</strong> accepted your invite to <strong>${team.name}</strong>!`);
+      }
+      UI.activeTeam=inv.teamId;UI.page='tasks';
+    }
+  } else {
+    addNotif(inv.fromUserId,`@${me().username} declined the invite to <strong>${DB.teams[inv.teamId]?.name}</strong>`);
+  }
+  const jobs=[svMeta()];
+  if(accept && DB.teams[inv.teamId]) jobs.push(svTeam(inv.teamId));
+  jobs.push(svUser());
+  await Promise.all(jobs);
+  renderApp();
+}
+
+// FIX: kickMember no longer calls loadDB() 
+async function saveRole(mid){
+  const team=getTeam();if(!team||team.ownerId!==SESSION.userId)return;
+  const newRole=document.getElementById('M_ROLE_SEL').value;
+  if(!team.roles)team.roles={};
+  team.roles[mid]=newRole;
+  const m=DB.users[mid];
+  addAct(team.id,'ti-shield','var(--accg)',`<strong>${m?.display}</strong> role changed to <strong>${newRole}</strong>`);
+  if(m?.telegramId) tgSend(m.telegramId,`🛡️ <b>TeamFlow</b>\nYour role in <b>${team.name}</b> changed to <b>${ROLES[newRole].icon} ${ROLES[newRole].label}</b>`);
+  await svTeam(team.id);closeModal();renderApp();
+}
+
+async function kickMember(mid){
+  const team=getTeam();if(!team||!canKick(team))return;
+  const m=DB.users[mid];if(!confirm(`Remove ${m?.display} from the team?`))return;
+  if(!team.removedMembers)team.removedMembers=[];
+  if(!team.removedMembers.includes(mid))team.removedMembers.push(mid);
+  team.members=team.members.filter(x=>x!==mid);
+  (team.tasks||[]).forEach(t=>{if(t.assignees)t.assignees=t.assignees.filter(a=>a!==mid)});
+  addAct(team.id,'ti-user-minus','var(--redg)',`<strong>${m?.display||'Member'}</strong> was removed from the team`);
+  if(mid!==SESSION.userId)addNotif(mid,`You were removed from team <strong>${team.name}</strong>`);
+  await Promise.all([svTeam(team.id), sv('user:'+mid)]);
+  renderApp();
+}
+
+// FIX: addTask no longer calls loadDB()
+async function addTask(){
+  const title=document.getElementById('M_TITLE').value.trim();if(!title)return;
+  const team=getTeam();if(!team)return;
+  const task={id:uid(),title,createdBy:SESSION.userId,description:document.getElementById('M_DESC').value.trim(),priority:document.getElementById('M_PRIO').value,status:document.getElementById('M_STAT').value,deadline:document.getElementById('M_DL').value||null,skills:document.getElementById('M_SKILL').value,assignees:[...tmpAssignees],labels:[...tmpLabels],progress:parseInt(document.getElementById('M_PROG').value)||0,comments:[],created:Date.now()};
+  team.tasks.push(task);tmpAssignees=[];tmpLabels=[];
+  addAct(team.id,'ti-clipboard-plus','var(--accg)',`Task <strong>"${title}"</strong> created by <strong>${me().display}</strong>`);
+  console.log('addTask: assignees=',task.assignees);
+  // FIX: مستقیم از task.assignees و DB.users بخون — دقیقاً مثل saveRole
+  task.assignees.forEach(mid=>{
+    if(mid===SESSION.userId)return;
+    const m=DB.users[mid];
+    console.log('notify check for',mid,'user=',m,'telegramId=',m?.telegramId);
+    if(!m)return;
+    addNotif(mid,`You were assigned to <strong>"${title}"</strong> in ${team.name}`);
+    if(m.telegramId){
+      tgSend(m.telegramId,`🔔 <b>TeamFlow</b>\nYou were assigned a new task!\n\n📋 <b>${title}</b>\nTeam: ${team.name}\nPriority: ${task.priority}${task.deadline?'\nDeadline: '+task.deadline:''}`);
+    }
+  });
+  if(task.deadline&&days(task.deadline)<=3){const warn=`Task "${title}" is due ${dlLbl(task.deadline)}`;task.assignees.forEach(mid=>{if(mid!==SESSION.userId)addNotif(mid,warn)})}
+  await svTeam(team.id);closeModal();renderApp();
+}
+
+// FIX: saveTask no longer calls loadDB()
+async function saveTask(id){
+  const team=getTeam();if(!team)return;
+  const task=team.tasks.find(t=>t.id===id);if(!task)return;
+  const oldStatus=task.status;
+  task.title=document.getElementById('M_TITLE').value.trim();
+  task.description=document.getElementById('M_DESC').value.trim();
+  task.priority=document.getElementById('M_PRIO').value;
+  task.status=document.getElementById('M_STAT').value;
+  task.deadline=document.getElementById('M_DL').value||null;
+  task.skills=document.getElementById('M_SKILL').value;
+  task.assignees=[...tmpAssignees];
+  task.labels=[...tmpLabels];
+  task.progress=parseInt(document.getElementById('M_PROG').value)||0;
+  if(task.status!==oldStatus){
+    addAct(team.id,'ti-arrows-exchange','var(--blug)',`<strong>"${task.title}"</strong> moved to <strong>${STATUS_MAP[task.status]}</strong> by <strong>${me().display}</strong>`);
+    if(task.status==='done'){
+      task.completedAt=Date.now();
+      task.completedBy=SESSION.userId;
+      if(SESSION.userId===team.ownerId){
+        task.approved=true;
+      }else{
+        task.approved=false;
+        if(team.ownerId!==SESSION.userId){
+          addNotif(team.ownerId,`<strong>${me().display}</strong> completed <strong>"${task.title}"</strong> — needs your approval`);
+          const owner=DB.users[team.ownerId];
+          if(owner?.telegramId) tgSend(owner.telegramId,`✅ <b>TeamFlow</b>\n${me().display} completed a task and needs your approval!\n\n📋 <b>${task.title}</b>\nTeam: ${team.name}`);
+        }
+      }
+      (task.assignees||[]).filter(mid=>mid!==SESSION.userId).forEach(mid=>{
+        addNotif(mid,`Task "${task.title}" was marked done`);
+        const m=DB.users[mid];
+        if(m?.telegramId) tgSend(m.telegramId,`✅ <b>TeamFlow</b>\nTask completed!\n\n📋 <b>${task.title}</b>\nTeam: ${team.name}`);
+      });
+    }
+  }
+  tmpAssignees=[];tmpLabels=[];
+  await svTeam(team.id);closeModal();renderApp();
+}
+
+// FIX: deleteTask no longer calls loadDB()
+async function deleteTask(id){
+  if(!confirm('Delete this task?'))return;
+  const team=getTeam();if(!team)return;
+  const task=team.tasks.find(t=>t.id===id);
+  team.tasks=team.tasks.filter(t=>t.id!==id);
+  if(!DB.deletedTasks)DB.deletedTasks={};
+  if(!DB.deletedTasks[team.id])DB.deletedTasks[team.id]=[];
+  if(!DB.deletedTasks[team.id].includes(id))DB.deletedTasks[team.id].push(id);
+  addAct(team.id,'ti-trash','var(--redg)',`Task <strong>"${task?.title||'task'}"</strong> deleted by <strong>${me().display}</strong>`);
+  await Promise.all([svTeam(team.id), svMeta()]);closeModal();renderApp();
+}
+
+// ── @Mention System ────────────────────────────────────────────
+let _mentionActiveIdx=0;
+
+function highlightMentions(text,team){
+  if(!text)return'';
+  // اسکیپ HTML خطرناک ساده
+  const esc=text.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return esc.replace(/@([a-zA-Z0-9_]+)/g,(match,uname)=>{
+    const found=(team.members||[]).map(mid=>DB.users[mid]).find(u=>u&&u.username===uname);
+    return found?`<span class="mention-tag">@${uname}</span>`:match;
+  });
+}
+
+function extractMentions(text,team){
+  const usernames=[...text.matchAll(/@([a-zA-Z0-9_]+)/g)].map(m=>m[1]);
+  const uniqueNames=[...new Set(usernames)];
+  return uniqueNames.map(uname=>(team.members||[]).map(mid=>DB.users[mid]).find(u=>u&&u.username===uname)).filter(Boolean);
+}
+
+function getMentionQuery(input){
+  const pos=input.selectionStart;
+  const text=input.value.slice(0,pos);
+  const match=text.match(/@([a-zA-Z0-9_]*)$/);
+  return match?match[1]:null;
+}
+
+function onCommentInput(taskId){
+  const input=document.getElementById('C_TEXT');
+  const dd=document.getElementById('MENTION_DD');
+  if(!input||!dd)return;
+  const team=getTeam();if(!team)return;
+  const query=getMentionQuery(input);
+  if(query===null){dd.style.display='none';return;}
+  const matches=(team.members||[]).map(mid=>DB.users[mid]).filter(u=>u&&u.id!==SESSION.userId&&u.username.toLowerCase().startsWith(query.toLowerCase()));
+  if(matches.length===0){dd.style.display='none';return;}
+  _mentionActiveIdx=0;
+  dd.style.display='block';
+  dd.innerHTML=matches.map((u,i)=>`
+    <div class="mention-item${i===0?' hi':''}" data-idx="${i}" data-username="${u.username}" onclick="selectMention('${u.username}')">
+      <div class="av av-xs" style="background:${ac(u.display)}22;color:${ac(u.display)}">${ini(u.display)}</div>
+      <span>${u.display}</span><span style="color:var(--text3)">@${u.username}</span>
+    </div>`).join('');
+}
+
+function onCommentKeydown(event,taskId){
+  const dd=document.getElementById('MENTION_DD');
+  const isOpen=dd&&dd.style.display==='block';
+  if(isOpen){
+    const items=dd.querySelectorAll('.mention-item');
+    if(event.key==='ArrowDown'){event.preventDefault();_mentionActiveIdx=Math.min(_mentionActiveIdx+1,items.length-1);updateMentionHighlight(items);return;}
+    if(event.key==='ArrowUp'){event.preventDefault();_mentionActiveIdx=Math.max(_mentionActiveIdx-1,0);updateMentionHighlight(items);return;}
+    if(event.key==='Enter'||event.key==='Tab'){
+      event.preventDefault();
+      const active=items[_mentionActiveIdx];
+      if(active)selectMention(active.dataset.username);
+      return;
+    }
+    if(event.key==='Escape'){dd.style.display='none';return;}
+  }
+  if(event.key==='Enter'&&!isOpen){addComment(taskId);}
+}
+
+function updateMentionHighlight(items){
+  items.forEach((el,i)=>el.classList.toggle('hi',i===_mentionActiveIdx));
+}
+
+function selectMention(username){
+  const input=document.getElementById('C_TEXT');
+  const dd=document.getElementById('MENTION_DD');
+  if(!input)return;
+  const pos=input.selectionStart;
+  const text=input.value;
+  const before=text.slice(0,pos).replace(/@([a-zA-Z0-9_]*)$/,'@'+username+' ');
+  const after=text.slice(pos);
+  input.value=before+after;
+  const newPos=before.length;
+  input.focus();
+  input.setSelectionRange(newPos,newPos);
+  if(dd)dd.style.display='none';
+}
+
+
+async function addComment(taskId){
+  const text=document.getElementById('C_TEXT').value.trim();if(!text)return;
+  const team=getTeam();if(!team)return;
+  const task=team.tasks.find(t=>t.id===taskId);if(!task)return;
+  const author=me().display;
+  if(!task.comments)task.comments=[];
+  task.comments.push({id:uid(),author,authorId:SESSION.userId,text,ts:Date.now()});
+  addAct(team.id,'ti-message-2','var(--accg)',`<strong>${author}</strong> commented on <strong>"${task.title}"</strong>`);
+  // notif معمولی برای assignee ها
+  (task.assignees||[]).filter(mid=>mid!==SESSION.userId).forEach(mid=>{addNotif(mid,`${author} commented on "${task.title}"`)});
+  // notif مخصوص برای کسانی که با @ منشن شدن
+  const mentioned=extractMentions(text,team);
+  mentioned.forEach(u=>{
+    if(u.id===SESSION.userId)return;
+    addNotif(u.id,`<strong>${author}</strong> mentioned you in a comment on <strong>"${task.title}"</strong>`);
+    if(u.telegramId){
+      tgSend(u.telegramId,`💬 <b>TeamFlow</b>\n${author} mentioned you in a comment!\n\n📋 <b>${task.title}</b>\nTeam: ${team.name}\n\n"${text}"`);
+    }
+  });
+  await svTeam(team.id);closeModal();openModal('viewTask',taskId);
+}
+
+// FIX: quickStatus no longer calls loadDB()
+async function quickStatus(id){
+  const team=getTeam();if(!team)return;
+  const task=team.tasks.find(t=>t.id===id);if(!task)return;
+  const cycle=['todo','inprogress','review','done','blocked'];
+  const i=cycle.indexOf(task.status);task.status=cycle[(i+1)%cycle.length];
+  addAct(team.id,'ti-arrows-exchange','var(--blug)',`<strong>"${task.title}"</strong> → ${STATUS_MAP[task.status]}`);
+  if(task.status==='done'){
+    task.completedAt=Date.now();
+    task.completedBy=SESSION.userId;
+    // اگه owner خودش تسک رو done کرد، خودکار تایید میشه. در غیر این صورت منتظر تایید owner می‌مونه
+    if(SESSION.userId===team.ownerId){
+      task.approved=true;
+    }else{
+      task.approved=false;
+      // به owner اطلاع بده که یه تسک منتظر تاییده
+      if(team.ownerId!==SESSION.userId){
+        addNotif(team.ownerId,`<strong>${me().display}</strong> completed <strong>"${task.title}"</strong> — needs your approval`);
+        const owner=DB.users[team.ownerId];
+        if(owner?.telegramId) tgSend(owner.telegramId,`✅ <b>TeamFlow</b>\n${me().display} completed a task and needs your approval!\n\n📋 <b>${task.title}</b>\nTeam: ${team.name}`);
+      }
+    }
+    (task.assignees||[]).filter(m=>m!==SESSION.userId).forEach(mid=>addNotif(mid,`"${task.title}" was completed`));
+  }
+  await svTeam(team.id);renderApp();
+}
+
+// فقط owner می‌تونه تسک رو تایید کنه تا امتیازش ثبت بشه
+async function approveTask(taskId){
+  const team=getTeam();if(!team||team.ownerId!==SESSION.userId)return;
+  const task=team.tasks.find(t=>t.id===taskId);if(!task)return;
+  task.approved=true;
+  addAct(team.id,'ti-circle-check','var(--grng)',`<strong>${me().display}</strong> approved <strong>"${task.title}"</strong>`);
+  (task.assignees||[]).filter(mid=>mid!==SESSION.userId).forEach(mid=>{
+    addNotif(mid,`Your task <strong>"${task.title}"</strong> was approved! Points added.`);
+    const m=DB.users[mid];
+    if(m?.telegramId) tgSend(m.telegramId,`🎉 <b>TeamFlow</b>\nYour task was approved!\n\n📋 <b>${task.title}</b>\nTeam: ${team.name}\nPoints have been added to your score.`);
+  });
+  await svTeam(team.id);closeModal();renderApp();
+}
+
+// owner می‌تونه رد کنه و برگردونه به review برای اصلاح
+async function rejectTask(taskId){
+  const team=getTeam();if(!team||team.ownerId!==SESSION.userId)return;
+  const task=team.tasks.find(t=>t.id===taskId);if(!task)return;
+  task.status='review';
+  task.approved=null;
+  addAct(team.id,'ti-circle-x','var(--redg)',`<strong>${me().display}</strong> sent <strong>"${task.title}"</strong> back for review`);
+  (task.assignees||[]).filter(mid=>mid!==SESSION.userId).forEach(mid=>{
+    addNotif(mid,`Your task <strong>"${task.title}"</strong> needs more work — sent back to review`);
+    const m=DB.users[mid];
+    if(m?.telegramId) tgSend(m.telegramId,`↩️ <b>TeamFlow</b>\nYour task was sent back for review.\n\n📋 <b>${task.title}</b>\nTeam: ${team.name}`);
+  });
+  await svTeam(team.id);closeModal();renderApp();
+}
+
+async function saveProfile(){
+  const u=me();if(!u)return;
+  const msg=document.getElementById('PROFILE_MSG');
+  const newEmail=document.getElementById('M_EMAIL').value.trim().toLowerCase();
+  const oldEmail=(u.email||'').toLowerCase();
+
+  if(newEmail&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)){
+    if(msg){msg.style.color='var(--red)';msg.textContent='Please enter a valid email address';}
+    return;
+  }
+  // چک کن ایمیل تکراری نباشه (برای یوزر دیگه)
+  if(newEmail&&Object.values(DB.users).find(x=>x.id!==u.id&&(x.email||'').toLowerCase()===newEmail)){
+    if(msg){msg.style.color='var(--red)';msg.textContent='This email is already used by another account';}
+    return;
+  }
+
+  u.display=document.getElementById('M_DISPLAY').value.trim()||u.display;
+  u.role=document.getElementById('M_ROLE').value.trim();
+  u.telegramId=document.getElementById('M_TG').value.trim()||null;
+  u.skills=[...tmpSkills];
+
+  const emailChanged=newEmail!==oldEmail;
+  if(emailChanged){
+    u.email=newEmail||null;
+    if(newEmail){
+      // ایمیل جدید/تغییریافته باید دوباره verify بشه
+      u.verified=false;
+      const sent=await sendVerificationEmail(u);
+      await svUser();
+      if(sent){
+        closeModal();renderApp();
+        // نمایش پیام بعد از رندر مجدد پروفایل
+        setTimeout(()=>{
+          const p=document.getElementById('CONTENT');
+          if(p) p.insertAdjacentHTML('afterbegin',`<div style="background:var(--ambg);border:1px solid var(--amb);border-radius:var(--rl);padding:11px 14px;margin-bottom:14px;font-size:13px;color:var(--amb)"><i class="ti ti-mail"></i> Verification email sent to ${newEmail}. Please check your inbox to verify your new email.</div>`);
+        },50);
+      }else{
+        closeModal();renderApp();
+      }
+      return;
+    }else{
+      u.verified=false;
+    }
+  }
+
+  await svUser();closeModal();renderApp();
+}
+
+// FIX: leaveTeam no longer calls loadDB() before modifying state
+// This was the main cause of "rejoin after leave" bug
+async function leaveTeam(){
+  const team=getTeam();if(!team)return;
+  if(team.ownerId===SESSION.userId){
+    const remaining=(team.members||[]).filter(m=>m!==SESSION.userId);
+    if(remaining.length){
+      if(!confirm('You are the owner. Transfer ownership and leave this team?'))return;
+      team.ownerId=remaining[0];
+      if(!team.removedMembers)team.removedMembers=[];
+      if(!team.removedMembers.includes(SESSION.userId))team.removedMembers.push(SESSION.userId);
+      team.members=remaining;
+      (team.tasks||[]).forEach(t=>{if(t.assignees)t.assignees=t.assignees.filter(a=>a!==SESSION.userId)});
+      addAct(team.id,'ti-door-exit','var(--redg)',`<strong>${me().display}</strong> left the team`);
+      addNotif(team.ownerId,`You are now the owner of team <strong>${team.name}</strong>`);
+    }else{
+      if(!confirm('You are the only member. Delete this team?'))return;
+      if(!DB.deletedTeams)DB.deletedTeams=[];
+      if(!DB.deletedTeams.includes(team.id))DB.deletedTeams.push(team.id);
+      delete DB.teams[team.id];
+    }
+  }else{
+    if(!confirm('Leave this team?'))return;
+    if(!team.removedMembers)team.removedMembers=[];
+    if(!team.removedMembers.includes(SESSION.userId))team.removedMembers.push(SESSION.userId);
+    team.members=(team.members||[]).filter(m=>m!==SESSION.userId);
+    (team.tasks||[]).forEach(t=>{if(t.assignees)t.assignees=t.assignees.filter(a=>a!==SESSION.userId)});
+    addAct(team.id,'ti-door-exit','var(--redg)',`<strong>${me().display}</strong> left the team`);
+  }
+  UI.activeTeam=myTeams()[0]?.id||null;
+  // FIX: باید team row رو هم save کنیم چون members تغییر کرده
+  const saveJobs=[svMeta(), svUser()];
+  if(DB.teams[team.id]) saveJobs.push(svTeam(team.id));
+  await Promise.all(saveJobs);
+  renderApp();
+}
+
+function toggleMobTeamMenu(){
+  const menu=document.getElementById('MOB_TEAM_MENU');
+  if(!menu)return;
+  const isOpen=menu.style.display==='block';
+  menu.style.display=isOpen?'none':'block';
+}
+
+function applyTheme(){
+  document.documentElement.setAttribute('data-theme',UI.theme==='light'?'light':'');
+}
+
+function toggleTheme(){
+  UI.theme=UI.theme==='light'?'dark':'light';
+  applyTheme();
+  saveLocal();
+  renderApp();
+}
+
+function toggleMobDrawer(){
+  const drawer=document.getElementById('MOB_DRAWER');
+  const overlay=document.getElementById('MOB_OVERLAY');
+  if(!drawer||!overlay)return;
+  const isOpen=drawer.classList.contains('open');
+  drawer.classList.toggle('open',!isOpen);
+  overlay.classList.toggle('open',!isOpen);
+}
+
+function setTeam(id){stopChatPolling();UI.activeTeam=id;UI.page='tasks';UI.filter='all';UI.memberFilter=null;UI.searchQ='';saveLocal();renderApp()}
+function setPage(p){
+  UI.page=p;saveLocal();renderApp();
+  if(p==='chat'){startChatPolling();setTimeout(scrollChatToBottom,50);}
+  else stopChatPolling();
+}
+function setFilter(f){UI.filter=f;renderApp()}
+function filterMember(id){UI.memberFilter=UI.memberFilter===id?null:id;UI.page='tasks';saveLocal();renderApp()}
+function clearMFilter(){UI.memberFilter=null;saveLocal();renderApp()}
+function doSearch(q){
+  UI.searchQ=q;
+  // فقط لیست تسک‌ها رو آپدیت کن، نه کل صفحه — تا focus input حفظ بشه
+  const content=document.getElementById('CONTENT');
+  if(content&&UI.page==='tasks'){
+    const team=getTeam();if(!team)return;
+    let tasks=team.tasks||[];
+    if(UI.memberFilter)tasks=tasks.filter(t=>(t.assignees||[]).includes(UI.memberFilter));
+    if(UI.filter!=='all')tasks=tasks.filter(t=>t.status===UI.filter);
+    if(q){const lq=q.toLowerCase();tasks=tasks.filter(t=>t.title.toLowerCase().includes(lq)||(t.description||'').toLowerCase().includes(lq));}
+    const listEl=document.getElementById('TASK_LIST');
+    if(listEl){
+      listEl.innerHTML=tasks.length===0?`<div class="empty"><i class="ti ti-clipboard-x"></i>${q?'No matches':'No tasks yet'}</div>`:tasks.map(t=>renderTaskCard(t,team)).join('');
+      return;
+    }
+  }
+  renderApp();
+}
+function clearAct(){const t=getTeam();if(t){t.activity=[];svTeam(t.id);renderApp()}}
+function clearNotifs(){const u=me();if(u){u.notifs=[];svUser();renderApp()}}
+
+function exportData(){
+  const team=getTeam();if(!team)return;
+  const exp={...team,members:team.members.map(mid=>({id:mid,...DB.users[mid],password:undefined}))};
+  const blob=new Blob([JSON.stringify(exp,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=team.name.replace(/\s+/g,'_')+'.json';a.click();
+}
+
+// ── Boot ────────────────────────────────────────────────────────
+ldLocal();
+applyTheme();
+if(typeof emailjs!=='undefined') emailjs.init({publicKey:EMAILJS_PUBLIC_KEY});
+showLoading();
+
+async function boot(){
+  // اگه لینک verify یا reset باشه، اول اونو پردازش کن
+  if(checkAuthLinkParams()) return;
+
+  let retries=3;
+  while(retries-->0){
+    try{
+      await loadDB();
+      if(SESSION.userId && !DB.users[SESSION.userId]) SESSION.userId=null;
+      render();
+      return;
+    }catch(err){
+      console.error('DB load error, retries left:',retries,err);
+      if(retries>0){
+        await new Promise(r=>setTimeout(r,2000)); // صبر 2 ثانیه و دوباره امتحان
+      }
+    }
+  }
+  // بعد از 3 بار تلاش، اگه کاربر لاگین بود همون حافظه رو نشون بده
+  if(SESSION.userId){
+    render();
+    showSaveIndicator(false,'Offline mode');
+  } else {
+    document.getElementById('APP').innerHTML=`<div class="auth-screen"><div class="auth-card" style="text-align:center">
+      <div class="auth-logo" style="margin-bottom:16px">Team<span>Flow</span></div>
+      <div style="color:var(--red);font-size:13px">Could not connect to database.<br>Please check your internet connection and refresh.</div>
+    </div></div>`;
+  }
+}
+boot();
+
+Object.assign(window,{
+  renderAuth,doLogin,doRegister,doLogout,doForgotPassword,doSetNewPassword,doResendVerification,toggleRegSkill,
+  openModal,closeModal,pickColor,toggleMobDrawer,toggleMobTeamMenu,toggleTheme,
+  setTeam,setPage,setFilter,filterMember,clearMFilter,doSearch,setKanbanCol,
+  doPerfSearch,setPerfSort,showAssigneeSuggestions,pickSuggested,suggestTaskDeadline,
+  openAssistant,closeAssistant,asstBack,asstShowMyDay,asstOpenTask,asstShowTeamPerf,asstShowMemberPick,asstShowMember,asstShowInsights,asstShowWeekly,
+  createTeam,sendInvite,respondInvite,kickMember,leaveTeam,
+  addTask,saveTask,deleteTask,addComment,quickStatus,approveTask,rejectTask,
+  onCommentInput,onCommentKeydown,selectMention,
+  sendChatMessage,onChatInput,onChatKeydown,selectChatMention,
+  saveProfile,saveRole,clearAct,clearNotifs,exportData,
+  toggleAss,toggleLabel,toggleSkill
+});
+</script>
